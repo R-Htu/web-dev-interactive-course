@@ -54,7 +54,7 @@ const LESSONS = [
         correct:0, explain:"HTML = HyperText Markup Language — the standard markup language for web pages." },
       { q:"Which tag creates the largest heading?",
         choices:["<h6>","<heading>","<h1>","<big>"],
-        correct:2, explain:"<h1> is the largest heading tag. Headings go from h1 (biggest) to h6 (smallest)." },
+        correct:2, explain:"&lt;h1&gt; is the largest heading tag. Headings go from h1 (biggest) to h6 (smallest)." },
       { q:"Where does visible page content go?",
         choices:["<head>","<meta>","<title>","<body>"],
         correct:3, explain:"The <body> tag contains everything visible on the page." },
