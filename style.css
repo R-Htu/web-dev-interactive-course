@@ -522,7 +522,8 @@ body {
 /* ═══════════════════════════════════════
    BUTTONS
 ═══════════════════════════════════════ */
-.btn-row { display:flex; gap:10px; flex-wrap:wrap; margin-top:16px; }
+.btn-row { display:flex; gap:10px; flex-wrap:wrap; margin:16px; }
+
 .btn {
   font-family:'JetBrains Mono',monospace; font-size:.78rem;
   padding:9px 18px; border-radius:6px; cursor:pointer;
@@ -667,9 +668,6 @@ body {
   .intro-title { font-size:1.8rem; }
  
 }
-/* ═══════════════════════════════════════
-   RESPONSIVE OVERRIDES
-═══════════════════════════════════════ */
 
 /* Tablets and Small Laptops */
 @media (max-width: 1024px) {
@@ -744,13 +742,9 @@ body {
     justify-content: center;
     margin: 0 auto;        
   }
-
   .btn-row {
-    flex-direction: column;  
-    gap: 10px;
-    align-items: stretch;   
+    margin: 10px 0;
   }
-
 
   .fb-msg {
     font-size: 0.75rem;      
