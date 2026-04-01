@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Dev</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div id="toast-container" class="toast-container"></div>
+<button class="theme-btn" id="themeBtn" onclick="toggleTheme()">[~]</button>
+
+<!-- ═══════════════════════════════════
+     INTRO
+═══════════════════════════════════ -->
+<div class="intro-panel" id="introPanel">
+  <div class="intro-content">
+    <div class="intro-text">
+      <div class="intro-eyebrow">// web_dev_academy.start()</div>
+      <h1 class="intro-title">Learn <span class="hl-html">HTML</span>, <span class="hl-css">CSS</span> &amp; <span class="hl-js">JavaScript</span></h1>
+      <p class="intro-desc">
+        Interactive lessons with a <strong>live code runner</strong> — write code and see it render instantly.
+        No install. No account. 100% free.
+      </p>
+      <div class="intro-stats">
+        <div class="stat"><span class="stat-val" id="stat-lessons">15</span><span class="stat-label">Lessons</span></div>
+        <div class="stat"><span class="stat-val" id="stat-quizzes">60</span><span class="stat-label">Quizzes</span></div>
+        <div class="stat"><span class="stat-val" id="stat-challenges">30</span><span class="stat-label">Challenges</span></div>
+        <div class="stat"><span class="stat-val">0</span><span class="stat-label">Install</span></div>
+
+      </div>
+      <ul class="intro-steps">
+        <li><strong>1.</strong> Read the lesson &amp; watch live examples render</li>
+        <li><strong>2.</strong> Edit the code yourself — see output update instantly</li>
+        <li><strong>3.</strong> Pass the quiz and complete the challenge</li>
+      </ul>
+    </div>
+    <button class="btn-start" id="btnStart" onclick="openLesson(1)">Start Lesson 1 [ -> ]</button>
+  </div>
+</div>
+
+<div class="intro-continue" id="introContinue">
+  Continue: <a href="#" id="continueLnk" onclick="continueLesson()">Lesson <span id="continueNum">1</span></a>
+</div>
+
+<!-- ═══════════════════════════════════
+     SHELL
+═══════════════════════════════════ -->
+<div class="shell" id="shell">
+
+  <!-- HEADER -->
+  <header class="hdr">
+    <div class="hdr-brand">Web<span>Dev</span></div>
+    <div class="hdr-progress" title="Overall progress">
+      <div class="prog-track"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+      <span id="progPct">0%</span>
+    </div>
+    <div class="hdr-stats">
+      <div class="stat-pill"><span class="val orange" id="stStreak">0</span><span class="lbl">&gt;_&lt; streak</span></div>
+      <div class="stat-pill"><span class="val yellow" id="stPoints">0</span><span class="lbl">(*) pts</span></div>
+      <div class="stat-pill"><span class="val cyan"   id="stDone">0</span><span class="lbl">[@] done</span></div>
+    </div>
+  </header>
+
+  <!-- LESSONS GRID VIEW -->
+  <div id="view-lessons" class="view active">
+    <div class="lesson-grid" id="lessonGrid"></div>
+  </div>
+
+  <!-- LESSON VIEW -->
+  <div id="view-lesson" class="view hidden">
+    <button class="back-btn" onclick="goBack()"><- Back</button>
+
+    <div class="phase-bar" id="phaseBar">
+      <div class="phase-tab active" id="tab-learn"   onclick="switchPhase('learn')">[?] Learn</div>
+      <div class="phase-tab locked-tab" id="tab-quiz"    onclick="switchPhase('quiz')">[Q] Quiz</div>
+      <div class="phase-tab locked-tab" id="tab-code"    onclick="switchPhase('code')">[K] Challenge</div>
+    </div>
+
+    <!-- LEARN PHASE -->
+    <div id="phase-learn" class="phase-card fade-in">
+      <div id="learnContent"></div>
+      <div class="btn-row">
+        <button class="btn btn-primary btn-full" onclick="finishLearn()">I understand — Take Quiz [ -> ]</button>
+      </div>
+    </div>
+
+    <!-- QUIZ PHASE -->
+    <div id="phase-quiz" class="phase-card fade-in" style="display:none">
+      <div id="quizContent"></div>
+    </div>
+
+    <!-- CODE CHALLENGE PHASE -->
+    <div id="phase-code" class="phase-card fade-in" style="display:none">
+      <div id="codeContent"></div>
+    </div>
+  </div>
+
+  <!-- COMPLETE VIEW -->
+  <div id="view-complete" class="view hidden">
+    <div class="phase-card">
+      <div class="complete-screen" id="completeContent"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════
+     LIVE RUNNER MODAL
+═══════════════════════════════════ -->
+<div class="runner-overlay" id="runnerOverlay" onclick="closeRunner(event)">
+  <div class="runner-modal" id="runnerModal">
+    <div class="runner-header">
+      <div class="runner-title" id="runnerTitle">Live Preview</div>
+      <div class="runner-controls">
+        <button class="runner-run-btn" onclick="runCode()">▶ Run</button>
+        <button class="runner-close-btn" onclick="closeRunnerDirect()">✕</button>
+      </div>
+    </div>
+    <div class="runner-body">
+      <div class="runner-editor-pane">
+        <div class="runner-tabs" id="runnerTabs"></div>
+        <textarea class="runner-editor" id="runnerEditor" spellcheck="false"></textarea>
+      </div>
+      <div class="runner-preview-pane">
+        <div class="runner-preview-label">// output</div>
+        <iframe id="runnerFrame" class="runner-frame"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
