@@ -7,17 +7,17 @@ const LESSONS = [
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   //  HTML LESSONS 1–5
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  {
-    id:1, icon:"[W]", type:"html", color:"#f97316",
-    title:"HTML Basics & Structure",
-    desc:"Documents, elements, tags and the skeleton of the web",
-    content:[
-      { type:"text", heading:"What is HTML?",
-        body:`<strong>HTML</strong> (HyperText Markup Language) is the foundation of every web page. It defines <em>what</em> is on a page — text, images, buttons — using <strong>elements</strong> wrapped in <code>&lt;tags&gt;</code>.<br><br>
-        Think of HTML as the <strong>skeleton</strong> of a webpage. CSS adds skin and colour. JavaScript adds movement.` },
-      { type:"code", heading:"The HTML Document Shell", file:"index.html",
-        runnable:true,
-        html:`<!DOCTYPE html>
+   { 
+  id:1, icon:"[W]", type:"html", color:"#f97316",
+  title:"HTML Basics & Structure",
+  desc:"Documents, elements, tags and the skeleton of the web",
+  content:[
+    { type:"text", heading:"What is HTML?",
+      body:`<strong>HTML</strong> (HyperText Markup Language) is the foundation of every web page. It defines <em>what</em> is on a page — text, images, buttons — using <strong>elements</strong> wrapped in <code>&lt;tags&gt;</code>.<br><br>
+      Think of HTML as the <strong>skeleton</strong> of a webpage. CSS adds skin and colour. JavaScript adds movement.` },
+    { type:"code", heading:"The HTML Document Shell", file:"index.html",
+      runnable:true,
+      html:`<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8">
@@ -28,69 +28,72 @@ const LESSONS = [
     <p>This is my first web page.</p>
   <\/body>
 <\/html>`,
-        note:"Every HTML file starts with this skeleton. The &lt;head&gt; holds metadata, &lt;body&gt; holds visible content." },
-      { type:"points", heading:"Essential Tags",
-        points:[
-          "<code>&lt;h1&gt;</code>–<code>&lt;h6&gt;</code> — Headings (h1 is biggest, h6 smallest)",
-          "<code>&lt;p&gt;</code> — Paragraph of text",
-          "<code>&lt;a href='...'&gt;</code> — Hyperlink to another page or site",
-          "<code>&lt;img src='...' alt='...'&gt;</code> — Image (self-closing, no end tag)",
-          "<code>&lt;div&gt;</code> — Generic container block",
-          "<code>&lt;span&gt;</code> — Generic inline container",
-        ] },
-      { type:"code", heading:"Common Elements in Action", file:"elements.html",
-        runnable:true,
-        html:`<h1>Main Heading</h1>
+      note:`Every HTML file starts with this skeleton. 
+      <br>• <strong>&lt;!DOCTYPE html&gt;</strong>: Tells the browser this is a modern HTML5 document. 
+      <br>• <strong>&lt;html lang="en"&gt;</strong>: The root container, set to English for screen readers and search engines.
+      <br>• <strong>&lt;head&gt;</strong>: Holds metadata (invisible settings).
+      <br>• <strong>&lt;body&gt;</strong>: Holds all visible content.` },
+    { type:"points", heading:"Essential Tags",
+      points:[
+        "<code>&lt;h1&gt;</code>–<code>&lt;h6&gt;</code> — Headings (h1 is biggest, h6 smallest)",
+        "<code>&lt;p&gt;</code> — Paragraph of text",
+        "<code>&lt;a href='...'&gt;</code> — Hyperlink to another page or site",
+        "<code>&lt;img src='...' alt='...'&gt;</code> — Image (self-closing, no end tag)",
+        "<code>&lt;div&gt;</code> — Generic container block",
+        "<code>&lt;span&gt;</code> — Generic inline container",
+      ] },
+    { type:"code", heading:"Common Elements in Action", file:"elements.html",
+      runnable:true,
+      html:`<h1>Main Heading</h1>
 <h2>Sub Heading</h2>
 <p>This is a <strong>paragraph</strong> with <em>italic</em> text.</p>
 <a href="https://example.com">Visit Example.com</a>
 <br>
 <img src="https://placehold.co/200x80/3b82f6/fff?text=IMAGE" alt="placeholder">`,
-        note:"Hit [>] Run to see these elements render live!" },
-    ],
-    quiz:[
-      { q:"What does HTML stand for?",
-        choices:["HyperText Markup Language","High Text Modifier Language","HyperText Modern Layout","Hyper Transfer Markup Language"],
-        correct:0, explain:"HTML = HyperText Markup Language — the standard markup language for web pages." },
-      { q:"Which tag creates the largest heading?",
-        choices:["<h6>","<heading>","<h1>","<big>"],
-        correct:2, explain:"&lt;h1&gt; is the largest heading tag. Headings go from h1 (biggest) to h6 (smallest)." },
-      { q:"Where does visible page content go?",
-        choices:["<head>","<meta>","<title>","<body>"],
-        correct:3, explain:"The <body> tag contains everything visible on the page." },
-      { q:"Which tag creates a hyperlink?",
-        choices:["<link>","<a>","<href>","<url>"],
-        correct:1, explain:"The <a> (anchor) tag with an href attribute creates hyperlinks." },
-      { q:"Which is a self-closing tag?",
-        choices:["<p>","<div>","<img>","<h1>"],
-        correct:2, explain:"<img> is self-closing — it has no separate closing tag." },
-    ],
-    challenge:{
-      title:"Build Your First HTML Page",
-      desc:"Create a simple personal introduction page.",
-      task:`Build an HTML page with: a <strong>&lt;h1&gt;</strong> with your name, a <strong>&lt;p&gt;</strong> introducing yourself, a <strong>&lt;h2&gt;</strong> subheading, and a second <strong>&lt;p&gt;</strong>. Click Run to preview!`,
-      panes:["html"],
-      starterHtml:`<!-- Write your HTML here -->
-<h1>Your Name</h1>
+      note:"Hit [>] Run to see these elements render live!" },
+  ],
+  quiz:[
+    { q:"What does HTML stand for?",
+      choices:["HyperText Markup Language","High Text Modifier Language","HyperText Modern Layout","Hyper Transfer Markup Language"],
+      correct:0, explain:"HTML = HyperText Markup Language — the standard markup language for web pages." },
+    { q:"Which tag creates the largest heading?",
+      choices:["&lt;h6&gt;","&lt;heading&gt;","&lt;h1&gt;","&lt;big&gt;"],
+      correct:2, explain:"&lt;h1&gt; is the largest heading tag. Headings go from h1 (biggest) to h6 (smallest)." },
+    { q:"Where does visible page content go?",
+      choices:["&lt;head&gt;","&lt;meta&gt;","&lt;title&gt;","&lt;body&gt;"],
+      correct:3, explain:"The &lt;body&gt; tag contains everything visible on the page." },
+    { q:"Which tag creates a hyperlink?",
+      choices:["&lt;link&gt;","&lt;a&gt;","&lt;href&gt;","&lt;url&gt;"],
+      correct:1, explain:"The &lt;a&gt; (anchor) tag with an href attribute creates hyperlinks." },
+    { q:"Which is a self-closing tag?",
+      choices:["&lt;p&gt;","&lt;div&gt;","&lt;img&gt;","&lt;h1&gt;"],
+      correct:2, explain:"&lt;img&gt; is self-closing — it has no separate closing tag." },
+  ],
+  challenge:{
+    title:"Build Your First HTML Page",
+    desc:"Create a simple personal introduction page.",
+    task:`Build an HTML page with: a <strong>&lt;h1&gt;</strong> with your name, a <strong>&lt;p&gt;</strong> introducing yourself, a <strong>&lt;h2&gt;</strong> subheading, and a second <strong>&lt;p&gt;</strong>. Click Run to preview!`,
+    panes:["html"],
+    starterHtml:`<h1>Your Name</h1>
 <p>Write your introduction here...</p>
 
-<!-- Add a subheading and another paragraph -->`,
-      starterCss:``, starterJs:``,
-      hint:"Use h1, p, h2 tags. Content goes between opening and closing tags.",
-      checks: code => {
-        const h = code.html || "";
-        const hasH1  = /<h1[^>]*>/i.test(h);
-        const hasP   = (h.match(/<p[^>]*>/ig)||[]).length >= 2;
-        const hasH2  = /<h2[^>]*>/i.test(h);
-        if(hasH1 && hasP && hasH2) return { pass:true, title:"Page built!", feedback:"h1, two paragraphs and h2 — great HTML structure!" };
-        const m=[];
-        if(!hasH1) m.push("an <h1> heading");
-        if(!hasH2) m.push("an <h2> subheading");
-        if(!hasP)  m.push("at least 2 <p> paragraphs");
-        return { pass:false, title:"Not quite", feedback:"Still need:\n"+m.map(x=>" • "+x).join("\n") };
-      }
+`,
+    starterCss:``, starterJs:``,
+    hint:"Use h1, p, h2 tags. Content goes between opening and closing tags.",
+    checks: code => {
+      const h = code.html || "";
+      const hasH1  = /<h1[^>]*>/i.test(h);
+      const hasP   = (h.match(/<p[^>]*>/ig)||[]).length >= 2;
+      const hasH2  = /<h2[^>]*>/i.test(h);
+      if(hasH1 && hasP && hasH2) return { pass:true, title:"Page built!", feedback:"h1, two paragraphs and h2 — great HTML structure!" };
+      const m=[];
+      if(!hasH1) m.push("an <h1> heading");
+      if(!hasH2) m.push("an <h2> subheading");
+      if(!hasP)  m.push("at least 2 <p> paragraphs");
+      return { pass:false, title:"Not quite", feedback:"Still need:\n"+m.map(x=>" • "+x).join("\n") };
     }
-  },
+  }
+},
 
   {
     id:2, icon:"[=]", type:"html", color:"#f97316",
@@ -4866,7 +4869,7 @@ function renderChallengePhase(){
   <div class="ai-result" id="chalResult"></div>
   <div class="hint-box" id="chalHint">[!] ${ch.hint}</div>
   <div class="btn-row" style="margin-top:0">
-    <button class="btn btn-ghost" onclick="toggleHint()">Show Hint</button>
+    <button class="btn btn-ghost" id="hint" onclick="toggleHint()">Show Hint</button>
   </div>`;
 
   if(done) html+=`<div style="margin-top:16px"><button class="btn btn-primary btn-full" onclick="completionScreen()">Lesson Complete — Continue [ -> ]</button></div>`;
