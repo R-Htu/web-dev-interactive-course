@@ -1,1 +1,1 @@
-alive :https://r-htu.github.io/web-dev-interactive-course/
+live :https://r-htu.github.io/web-dev-interactive-course/
