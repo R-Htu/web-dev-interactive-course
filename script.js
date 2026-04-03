@@ -362,19 +362,18 @@ button { margin-top: 10px; padding: 8px 18px; background: #3b82f6; color: white;
         choices:["Main content","Navigation","Secondary/related content like sidebars","Footers"],
         correct:2, explain:"<aside> holds content related to the main content but not essential — like sidebars." },
     ],
-    challenge:{
-      title:"Semantic Blog Page",
-      desc:"Build a blog-style page using semantic HTML.",
-      task:`Create a page with: a <strong>&lt;header&gt;</strong> with site name, a <strong>&lt;nav&gt;</strong> with 3 links, a <strong>&lt;main&gt;</strong> with one <strong>&lt;article&gt;</strong> (title + paragraph), and a <strong>&lt;footer&gt;</strong>.`,
-      panes:["html","css"],
-      starterHtml:`<!-- Use semantic HTML tags -->
+    challenge: {
+  title: "Semantic Blog Page",
+  desc: "Build a blog-style page using semantic HTML.",
+  task: `Create a page with: a <strong>&lt;header&gt;</strong> containing the site name and a <strong>&lt;nav&gt;</strong> with 3 links, a <strong>&lt;main&gt;</strong> with one <strong>&lt;article&gt;</strong> (title + paragraph), and a <strong>&lt;footer&gt;</strong>.`,
+  panes: ["html", "css"],
+  starterHtml: `<!-- Use semantic HTML tags -->
 <header>
   <!-- Site name here -->
+  <nav>
+    <!-- 3 navigation links -->
+  </nav>
 </header>
-
-<nav>
-  <!-- 3 navigation links -->
-</nav>
 
 <main>
   <article>
@@ -385,27 +384,32 @@ button { margin-top: 10px; padding: 8px 18px; background: #3b82f6; color: white;
 <footer>
   <!-- Footer text -->
 </footer>`,
-      starterCss:`* { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+  starterCss: `* { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
 header { background: #1e293b; color: white; padding: 14px 20px; }
-nav    { background: #334155; padding: 8px 20px; }
+nav    { padding: 8px 0; }
 nav a  { color: #94a3b8; margin-right: 14px; text-decoration: none; }
 main   { padding: 20px; }
 article { background: #f0f9ff; padding: 16px; border-radius: 8px; }
 footer { background: #1e293b; color: #64748b; padding: 12px 20px; margin-top: 20px; }`,
-      starterJs:``,
-      hint:"Nest your <article> inside <main>. <nav> should have <a> tags.",
-      checks: code => {
-        const h = code.html || "";
-        const ok = [
-          /<header/i.test(h), /<nav/i.test(h),
-          /<main/i.test(h), /<article/i.test(h), /<footer/i.test(h),
-          (h.match(/<a\s/ig)||[]).length >= 3
-        ];
-        if(ok.every(Boolean)) return { pass:true, title:"Semantic layout complete!", feedback:"All semantic tags used correctly — great structure!" };
-        const labels=["<header>","<nav>","<main>","<article>","<footer>","3 <a> links in nav"];
-        return { pass:false, title:"Needs semantic tags", feedback:"Missing:\n"+labels.filter((_,i)=>!ok[i]).map(x=>" • "+x).join("\n") };
-      }
-    }
+  starterJs: ``,
+  hint: "Nest your <nav> inside <header>. Nest your <article> inside <main>. <nav> should have <a> tags.",
+  checks: code => {
+    const h = code.html || "";
+    const navInsideHeader = /<header[\s\S]*<nav[\s\S]*<\/nav>[\s\S]*<\/header>/i.test(h);
+    const ok = [
+      /<header/i.test(h),
+      /<nav/i.test(h),
+      navInsideHeader,
+      /<main/i.test(h),
+      /<article/i.test(h),
+      /<footer/i.test(h),
+      (h.match(/<a\s/ig) || []).length >= 3
+    ];
+    if (ok.every(Boolean)) return { pass: true, title: "Semantic layout complete!", feedback: "All semantic tags used correctly — great structure!" };
+    const labels = ["<header>", "<nav>", "<nav> inside <header>", "<main>", "<article>", "<footer>", "3 <a> links in nav"];
+    return { pass: false, title: "Needs semantic tags", feedback: "Missing:\n" + labels.filter((_, i) => !ok[i]).map(x => " • " + x).join("\n") };
+  }
+}
   },
 
   {
@@ -505,58 +509,95 @@ footer { background: #1e293b; color: #64748b; padding: 12px 20px; margin-top: 20
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 {
   id:6, icon:"[F]", type:"html", color:"#f97316",
-  title:"Forms & Inputs Advanced",
-  desc:"Explore more input types, labels, and form structure",
-  content:[
-    { type:"text", heading:"More Input Types",
-      body:`HTML supports many input types beyond text and email:<br>
-        <code>type="password"</code> — secure text<br>
-        <code>type="number"</code> — numeric input<br>
-        <code>type="date"</code> — calendar selection<br>
-        <code>type="checkbox"</code> — true/false<br>
-        <code>type="radio"</code> — select one option<br>
-        <code>type="file"</code> — upload files<br>
-        <code>type="color"</code> — color picker<br>
-        <code>type="range"</code> — slider` },
-    { type:"code", heading:"Form with Different Inputs", file:"advanced-form.html",
-      runnable:true,
-      html:`<form>
-  <label>Name: <input type="text"></label>
-  <label>Email: <input type="email"></label>
-  <label>Password: <input type="password"></label>
-  <label>Age: <input type="number" min="1" max="100"></label>
-  <label>Birthday: <input type="date"></label>
-  <label>Color: <input type="color"></label>
-  <label>Upload File: <input type="file"></label>
-  <label>Subscribe? <input type="checkbox"></label>
-  <button type="submit">Submit</button>
+title:"Forms & Inputs Advanced",
+desc:"Explore more input types, labels, and form structure",
+content:[
+  { type:"text", heading:"More Input Types",
+    body:`HTML supports many input types beyond text and email:<br>
+      <code>type="password"</code> — secure text<br>
+      <code>type="number"</code> — numeric input<br>
+      <code>type="date"</code> — calendar selection<br>
+      <code>type="checkbox"</code> — true/false<br>
+      <code>type="radio"</code> — select one option<br>
+      <code>type="file"</code> — upload files<br>
+      <code>type="color"</code> — color picker<br>
+      <code>type="range"</code> — slider` },
+  { type:"code", heading:"Form with Different Inputs", file:"advanced-form.html",
+    runnable:true,
+    html:`<form>
+<label>Name: <input type="text"></label>
+<label>Email: <input type="email"></label>
+<label>Password: <input type="password"></label>
+<label>Age: <input type="number" min="1" max="100"></label>
+<label>Birthday: <input type="date"></label>
+<label>Color: <input type="color"></label>
+<label>Upload File: <input type="file"></label>
+<label>Subscribe? <input type="checkbox"></label>
+<button type="submit">Submit</button>
 </form>` },
-  ],
-  quiz:[
-    { q:"Which input type hides entered text?",
-      choices:["text","email","password","number"],
-      correct:2, explain:"type='password' hides user input for security." },
-    { q:"Which input allows choosing a color?",
-      choices:["color","text","checkbox","range"],
-      correct:0, explain:"type='color' displays a color picker." },
-  ],
-  challenge:{
-    title:"Advanced Form Challenge",
-    desc:"Create a form using at least 5 different input types.",
-    task:`Use inputs like text, email, password, date, color, checkbox, number. Include labels.`,
-    panes:["html","css"],
-    starterHtml:`<form>
-  <!-- Add inputs here -->
+],
+quiz:[
+  { q:"Which input type hides entered text?",
+    choices:["text","email","password","number"],
+    correct:2, explain:"type='password' hides user input for security." },
+  { q:"Which input allows choosing a color?",
+    choices:["color","text","checkbox","range"],
+    correct:0, explain:"type='color' displays a color picker." },
+],
+challenge:{
+  title:"Advanced Form Challenge",
+  desc:"Create a form using at least 5 different input types.",
+  task:`Build a <strong>&lt;form&gt;</strong> that includes: a <strong>text</strong> input, an <strong>email</strong> input, a <strong>password</strong> input, and at least 2 more from: <strong>number</strong>, <strong>date</strong>, <strong>color</strong>, <strong>checkbox</strong>, <strong>radio</strong>, <strong>range</strong>, or <strong>file</strong>. Wrap each input in a <strong>&lt;label&gt;</strong>.`,
+  panes:["html","css"],
+  starterHtml:`<form>
+  <!-- Add your inputs here -->
+  <!-- Wrap each in a <label> -->
 </form>`,
-    starterCss:`form { font-family:sans-serif; } label { display:block; margin:8px 0; } input { margin:2px 0; }`,
-    checks: code => {
-      const h = code.html || "";
-      const inputCount = (h.match(/<input/i)||[]).length;
-      return inputCount>=5
-        ? { pass:true, title:"Great!", feedback:"You used 5+ input types correctly!" }
-        : { pass:false, title:"Not enough inputs", feedback:"Add at least 5 different input types." };
-    }
+  starterCss:`form { font-family: sans-serif; max-width: 400px; padding: 20px; }
+label { display: block; margin: 8px 0; font-size: 14px; }
+input { margin: 2px 0; padding: 4px; }`,
+  hint:"Use type='text', type='email', type='password', and at least 2 more input types. Each input should have a <label>.",
+  checks: code => {
+    const h = code.html || "";
+
+    const hasForm     = /<form/i.test(h);
+    const hasText     = /type=["']text["']/i.test(h);
+    const hasEmail    = /type=["']email["']/i.test(h);
+    const hasPassword = /type=["']password["']/i.test(h);
+    const hasLabel    = (h.match(/<label/ig) || []).length >= 3;
+
+    const extraTypes  = ["number","date","color","checkbox","radio","range","file"];
+    const extrasUsed  = extraTypes.filter(t => new RegExp(`type=["']${t}["']`,'i').test(h));
+    const hasExtras   = extrasUsed.length >= 2;
+
+    const totalTypes  = [hasText, hasEmail, hasPassword, ...extraTypes.map(t =>
+      new RegExp(`type=["']${t}["']`,'i').test(h))].filter(Boolean).length;
+    const hasFiveTypes = totalTypes >= 5;
+
+    const ok = [hasForm, hasText, hasEmail, hasPassword, hasLabel, hasExtras, hasFiveTypes];
+
+    if (ok.every(Boolean)) return {
+      pass: true,
+      title: "Form complete!",
+      feedback: `Great work! You used ${totalTypes} different input types with labels — solid form structure!`
+    };
+
+    const labels = [
+      "<form>",
+      'type="text" input',
+      'type="email" input',
+      'type="password" input',
+      "at least 3 <label> elements",
+      "2+ extra input types (number, date, color, checkbox, radio, range, or file)",
+      "5+ total distinct input types"
+    ];
+    return {
+      pass: false,
+      title: "Form needs more inputs",
+      feedback: "Missing:\n" + labels.filter((_,i) => !ok[i]).map(x => " • " + x).join("\n")
+    };
   }
+}
 },
 
 {
@@ -608,159 +649,419 @@ footer { background: #1e293b; color: #64748b; padding: 12px 20px; margin-top: 20
   challenge:{
     title:"Advanced Table Challenge",
     desc:"Make a table using caption, colspan, and rowspan.",
-    task:`Build a table with at least 3 columns and 4 rows, include a caption, and use colspan or rowspan.`,
+    task:`Build a <strong>&lt;table&gt;</strong> with at least <strong>3 columns</strong> and <strong>4 rows</strong>. Include a <strong>&lt;caption&gt;</strong>, use <strong>colspan</strong> or <strong>rowspan</strong>, and add <strong>&lt;th&gt;</strong> headers.`,
     panes:["html","css"],
     starterHtml:`<table border="1" cellpadding="8">
   <!-- Add caption, rows, colspan/rowspan -->
 </table>`,
+    starterCss:`table { border-collapse: collapse; font-family: sans-serif; }
+th { background: #1e293b; color: white; padding: 8px 12px; }
+td { padding: 8px 12px; }
+caption { font-weight: bold; margin-bottom: 8px; }`,
+    hint:"Add <caption> right after <table>. Use colspan='2' on a <td> to merge columns, rowspan='2' to merge rows.",
     checks: code => {
       const h = code.html || "";
-      const hasTable = /<table/i.test(h);
+
+      const hasTable   = /<table/i.test(h);
       const hasCaption = /<caption/i.test(h);
-      const hasColspan = /colspan=/i.test(h);
-      const hasRowspan = /rowspan=/i.test(h);
-      return hasTable && hasCaption && (hasColspan||hasRowspan)
-        ? { pass:true, title:"Advanced table done!", feedback:"Table includes caption and colspan/rowspan!" }
-        : { pass:false, title:"Incomplete", feedback:"Add caption and use colspan or rowspan." };
+      const hasTh      = /<th/i.test(h);
+      const hasColspan = /colspan=["']?\d+["']?/i.test(h);
+      const hasRowspan = /rowspan=["']?\d+["']?/i.test(h);
+      const hasSpan    = hasColspan || hasRowspan;
+      const rowCount   = (h.match(/<tr/ig) || []).length;
+      const hasRows    = rowCount >= 4;
+      const colCount   = (h.match(/<th/ig) || []).length || (h.match(/<td/ig) || []).length;
+      const hasCols    = colCount >= 3;
+
+      const ok = [hasTable, hasCaption, hasTh, hasSpan, hasRows, hasCols];
+
+      if (ok.every(Boolean)) return {
+        pass: true,
+        title: "Advanced table done!",
+        feedback: `Table includes caption, headers, ${rowCount} rows, and ${hasColspan && hasRowspan ? "both colspan and rowspan" : hasColspan ? "colspan" : "rowspan"} — great work!`
+      };
+
+      const labels = [
+        "<table>",
+        "<caption> title",
+        "<th> header cells",
+        "colspan or rowspan attribute",
+        "at least 4 rows (<tr>)",
+        "at least 3 columns"
+      ];
+      return {
+        pass: false,
+        title: "Table incomplete",
+        feedback: "Missing:\n" + labels.filter((_,i) => !ok[i]).map(x => " • " + x).join("\n")
+      };
     }
   }
 },
 
 {
-  id:8, icon:"[S]", type:"html", color:"#f97316",
-  title:"HTML Multimedia",
-  desc:"Embedding audio, video, and iframes",
-  content:[
-    { type:"text", heading:"Audio & Video",
-      body:`HTML5 supports multimedia:<br>
-        <code>&lt;audio controls&gt;</code> — embed audio<br>
-        <code>&lt;video controls width='...'&gt;</code> — embed video<br>
-        <code>&lt;source src='...' type='...'/&gt;</code> — media source<br>
-        <code>&lt;iframe src='...'&gt;&lt;/iframe&gt;</code> — embed other webpages` },
-    { type:"code", heading:"Video Example", file:"video.html",
-      runnable:true,
-      html:`<video controls width="320">
-  <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>` },
-    { type:"code", heading:"Audio Example", file:"audio.html",
-      runnable:true,
-      html:`<audio controls>
-  <source src="https://www.w3schools.com/html/horse.mp3" type="audio/mpeg">
-  Your browser does not support the audio element.
-</audio>` },
+  "id": 8,
+  "icon": "[S]",
+  "type": "html",
+  "color": "#f97316",
+  "title": "HTML Multimedia",
+  "desc": "Embedding audio, video, and iframes",
+  "content": [
+    {
+      "type": "text",
+      "heading": "Audio, Video & iFrame",
+      "body": "HTML5 supports multimedia:<br>\
+        <code>&lt;audio controls&gt;</code> — embed audio<br>\
+        <code>&lt;video controls width='...'&gt;</code> — embed video<br>\
+        <code>&lt;source src='...' type='...'/&gt;</code> — media source<br>\
+        <code>&lt;iframe src='...' width='...' height='...'&gt;&lt;/iframe&gt;</code> — embed other webpages<br><br>\
+        Additional notes:<br>\
+        - You can use multiple <code>&lt;source&gt;</code> tags inside <code>&lt;audio&gt;</code> or <code>&lt;video&gt;</code> for different formats to ensure browser compatibility.<br>\
+        - The <code>autoplay</code> attribute can start media automatically (not recommended for audio).<br>\
+        - The <code>loop</code> attribute repeats media continuously.<br>\
+        - The <code>muted</code> attribute can mute the video initially.<br>\
+        - <code>&lt;iframe&gt;</code> can embed interactive content like maps, videos, or other websites."
+    },
+    {
+      "type": "code",
+      "heading": "Video Example",
+      "file": "video.html",
+      "runnable": true,
+      "html": "<video controls width=\"320\">\n  <source src=\"https://www.w3schools.com/html/mov_bbb.mp4\" type=\"video/mp4\">\n  Your browser does not support the video tag.\n</video>"
+    },
+    {
+      "type": "code",
+      "heading": "Audio Example",
+      "file": "audio.html",
+      "runnable": true,
+      "html": "<audio controls>\n  <source src=\"https://www.w3schools.com/html/horse.mp3\" type=\"audio/mpeg\">\n  Your browser does not support the audio element.\n</audio>"
+    },
+    {
+      "type": "code",
+      "heading": "iFrame Example",
+      "file": "iframe.html",
+      "runnable": true,
+      "html": "<h3>Interactive Course Embed</h3>\n<iframe src=\"https://r-htu.github.io/web-dev-interactive-course/\" width=\"800\" height=\"600\" title=\"Web Dev Interactive Course\"></iframe>\n<p>This iframe embeds your interactive course page directly into this HTML.</p>"
+    }
   ],
-  quiz:[
-    { q:"Which attribute shows the media controls?",
-      choices:["src","controls","autoplay","loop"],
-      correct:1, explain:"The controls attribute adds play/pause buttons, volume, etc." },
-    { q:"Which tag embeds another web page inside your page?",
-      choices:["<embed>","<iframe>","<object>","<video>"],
-      correct:1, explain:"<iframe> lets you embed an external page inside your page." },
+  "quiz": [
+    {
+      "q": "Which attribute shows the media controls?",
+      "choices": ["src","controls","autoplay","loop"],
+      "correct": 1,
+      "explain": "The controls attribute adds play/pause buttons, volume, etc."
+    },
+    {
+      "q": "Which tag embeds another web page inside your page?",
+      "choices": ["<embed>","<iframe>","<object>","<video>"],
+      "correct": 1,
+      "explain": "&lt;iframe&gt; lets you embed an external page inside your page."
+    },
+    {
+      "q": "Which tag is used to define the media file source inside <audio> or <video>?",
+      "choices": ["<media>","<src>","<source>","<file>"],
+      "correct": 2,
+      "explain": "<source> specifies the media file and its type for audio/video elements."
+    },
+    {
+      "q": "Which attribute makes a video play automatically when the page loads?",
+      "choices": ["controls","autoplay","loop","muted"],
+      "correct": 1,
+      "explain": "The autoplay attribute starts the media automatically (though most browsers require it to be muted)."
+    },
+    {
+      "q": "Which attribute repeats the media continuously?",
+      "choices": ["loop","repeat","autoplay","controls"],
+      "correct": 0,
+      "explain": "The loop attribute makes audio or video play repeatedly until stopped."
+    }
   ],
   challenge:{
     title:"Multimedia Challenge",
     desc:"Embed an audio and a video in a page.",
-    task:`Add an <audio> element with controls and a <video> element with controls to your HTML page.`,
+    task:`Add a <strong>&lt;video&gt;</strong> element with <strong>controls</strong> and a <strong>&lt;source&gt;</strong> tag, and an <strong>&lt;audio&gt;</strong> element with <strong>controls</strong> and a <strong>&lt;source&gt;</strong> tag.`,
     panes:["html"],
     starterHtml:`<!-- Audio element here -->
+
 <!-- Video element here -->`,
+    hint:"Use <video controls> and <audio controls>. Add a <source src='...' type='...'> inside each.",
     checks: code => {
       const h = code.html || "";
-      const hasAudio = /<audio/i.test(h);
-      const hasVideo = /<video/i.test(h);
-      if(hasAudio && hasVideo)
-        return { pass:true, title:"Multimedia done!", feedback:"Audio and video embedded correctly!" };
-      return { pass:false, title:"Missing elements", feedback:"Include both <audio> and <video> elements." };
+
+      const hasAudio        = /<audio/i.test(h);
+      const hasVideo        = /<video/i.test(h);
+      const hasAudioCtrl    = /<audio[^>]*controls/i.test(h);
+      const hasVideoCtrl    = /<video[^>]*controls/i.test(h);
+      const hasAudioSource  = /<audio[\s\S]*?<source[\s\S]*?<\/audio>/i.test(h);
+      const hasVideoSource  = /<video[\s\S]*?<source[\s\S]*?<\/video>/i.test(h);
+
+      const ok = [hasAudio, hasVideo, hasAudioCtrl, hasVideoCtrl, hasAudioSource, hasVideoSource];
+
+      if (ok.every(Boolean)) return {
+        pass: true,
+        title: "Multimedia done!",
+        feedback: "Audio and video embedded correctly with controls and source tags!"
+      };
+
+      const labels = [
+        "<audio> element",
+        "<video> element",
+        "controls on <audio>",
+        "controls on <video>",
+        "<source> inside <audio>",
+        "<source> inside <video>"
+      ];
+      return {
+        pass: false,
+        title: "Missing multimedia elements",
+        feedback: "Missing:\n" + labels.filter((_,i) => !ok[i]).map(x => " • " + x).join("\n")
+      };
     }
   }
 },
 
 {
-  id:9, icon:"[I]", type:"html", color:"#f97316",
-  title:"HTML Comments & Entities",
-  desc:"Comments, special characters, and symbols",
-  content:[
-    { type:"text", heading:"Comments",
-      body:`HTML comments are added with <code>&lt;!-- comment here --&gt;</code> and are not visible on the page.` },
-    { type:"text", heading:"HTML Entities",
-      body:`Special characters like &lt;, &gt;, &amp;, &quot;, &copy; are written using HTML entities to avoid confusion with tags.` },
+  "id": 9,
+  "icon": "[I]",
+  "type": "html",
+  "color": "#f97316",
+  "title": "HTML Comments & Entities",
+  "desc": "Comments, special characters, and symbols",
+  "content": [
+    {
+      "type": "text",
+      "heading": "Comments",
+      "body": "HTML comments are added with <code>&lt;!-- comment here --&gt;</code> and are not visible on the page.<br><br>\
+        <strong>Use in real life:</strong><br>\
+        - You can explain sections of your code for yourself or teammates:<br>\
+        <code>&lt;!-- Navigation menu starts here --&gt;</code><br>\
+        - Temporarily disable code without deleting it:<br>\
+        <code>&lt;!-- &lt;p&gt;This paragraph is hidden&lt;/p&gt; --&gt;</code><br>\
+        - Comments do not affect page rendering, but can help with organization."
+    },
+   { type:"text", heading:"Why Entities Matter",
+  body:`If you write <code>&lt;p&gt;3 < 5&lt;/p&gt;</code> the browser may misread <code><</code> as the start of a tag and break your HTML. Entities are the safe way to display special characters.<br><br>
+  Common entities:<br>
+  <code>&amp;lt;</code> → displays as <strong>&lt;</strong><br>
+  <code>&amp;gt;</code> → displays as <strong>&gt;</strong><br>
+  <code>&amp;amp;</code> → displays as <strong>&amp;</strong><br>
+  <code>&amp;quot;</code> → displays as <strong>"</strong><br>
+  <code>&amp;copy;</code> → displays as <strong>©</strong>` },
+
+{ type:"code", heading:"Entities vs Raw Characters", file:"entities.html",
+  runnable:true,
+ html:`<style>
+  body { font-family: sans-serif; padding: 16px; font-size: 14px; }
+  .box { flex: 1; border-radius: 8px; padding: 12px; }
+  .bad  { background: #fff5f5; border: 2px solid #ef4444; }
+  .good { background: #f0fdf4; border: 2px solid #22c55e; }
+  .box h4 { margin: 0 0 8px; font-size: 13px; }
+  .red { color: #ef4444; } .green { color: #22c55e; }
+  .source { font-family: monospace; font-size: 12px; background: #1e293b; color: #93c5fd; padding: 8px; border-radius: 5px; margin-bottom: 8px; white-space: pre-wrap; }
+  .result { background: white; border: 1px solid #e2e8f0; border-radius: 5px; padding: 8px; min-height: 36px; }
+  .result-label { font-size: 11px; color: #94a3b8; margin-bottom: 4px; }
+  table { border-collapse: collapse; width: 100%; margin-top: 8px; font-size: 13px; }
+  th { background: #1e293b; color: white; padding: 8px; text-align: left; }
+  td { padding: 8px; border-bottom: 1px solid #e2e8f0; }
+  code { background: #f1f5f9; padding: 2px 5px; border-radius: 4px; }
+</style>
+
+<div class="box bad">
+  <h4>❌ Without Entities</h4>
+  <p>HTML: Para <p> tag</p>
+ 
+</div>
+
+<div class="box good">
+  <h4>✅ With Entities</h4>
+  <p>HTML: Para &lt;p&gt; tag</p>
+ 
+</div>
+
+<h3>📋 Entity Reference Table</h3>
+<table>
+  <tr><th>Character</th><th>Raw in HTML</th><th>With Entity</th><th>Why it matters</th></tr>
+  <tr><td><code>&lt;</code></td><td class="red">Becomes a tag — text disappears</td><td><code>&amp;lt;</code></td><td>Shows as visible text</td></tr>
+  <tr><td><code>&gt;</code></td><td class="red">Closes a tag unexpectedly</td><td><code>&amp;gt;</code></td><td>Shows as visible text</td></tr>
+  <tr><td><code>&amp;</code></td><td class="red">Starts broken entity reference</td><td><code>&amp;amp;</code></td><td>Avoids parsing errors</td></tr>
+  <tr><td><code>"</code></td><td class="red">Ends attribute value early</td><td><code>&amp;quot;</code></td><td>Safe inside attributes</td></tr>
+  <tr><td><code>'</code></td><td class="red">Ends attribute value early</td><td><code>&amp;apos;</code></td><td>Safe inside attributes</td></tr>
+  <tr><td><code>©</code></td><td class="green">Usually works</td><td><code>&amp;copy;</code></td><td>Always renders correctly</td></tr>
+</table>` },
   ],
-  quiz:[
-    { q:"How do you write a comment in HTML?",
-      choices:["<!-- comment -->","// comment","/* comment */","<comment>"],
-      correct:0, explain:"<!-- comment --> is the correct HTML comment syntax." },
-    { q:"Which entity displays the less-than sign '<'?",
-      choices:["&lt;","&gt;","&amp;","&quot;"],
-      correct:0, explain:"&lt; is the HTML entity for '<'." },
+  "quiz": [
+    {
+      "q": "How do you write a comment in HTML?",
+      "choices": ["<!-- comment -->","// comment","/* comment */","<comment>"],
+      "correct": 0,
+      "explain": "<!-- comment --> is the correct HTML comment syntax."
+    },
+    {
+      "q": "Which entity displays the less-than sign '<'?",
+      "choices": ["&lt;","&gt;","&amp;","&quot;"],
+      "correct": 0,
+      "explain": "&lt; is the HTML entity for '<'."
+    },
+    {
+      "q": "Which entity displays the ampersand '&'?",
+      "choices": ["&lt;","&gt;","&amp;","&copy;"],
+      "correct": 2,
+      "explain": "&amp; is used to display the '&' character in HTML."
+    },
+    {
+      "q": "Can HTML comments be nested inside each other?",
+      "choices": ["Yes","No","Only in HTML5","Only in XHTML"],
+      "correct": 1,
+      "explain": "HTML comments cannot be nested. Doing so may break your code."
+    },
+    {
+      "q": "Which entity represents the copyright symbol '©'?",
+      "choices": ["&reg;","&copy;","&trade;","&c"],
+      "correct": 1,
+      "explain": "&copy; displays the copyright symbol © in HTML."
+    }
   ],
   challenge:{
     title:"Comments & Entities",
     desc:"Practice adding comments and entities.",
-    task:`Add an HTML comment describing your page. Use at least 3 entities: &lt;, &gt;, &amp;, &quot;, &copy; somewhere in your page.`,
+    task:`Add an <strong>HTML comment</strong> describing your page. Use at least <strong>3 different entities</strong> from: <strong>&amp;lt;</strong>, <strong>&amp;gt;</strong>, <strong>&amp;amp;</strong>, <strong>&amp;quot;</strong>, <strong>&amp;copy;</strong> somewhere visible on the page.`,
     panes:["html"],
     starterHtml:`<!-- Your comment here -->
 <p>Use entities here: &lt;, &gt;, &amp;</p>`,
+    hint:"Write a comment like <!-- This is my page -->. Use &lt; for <, &gt; for >, &amp; for &, &quot; for quotes, &copy; for ©.",
     checks: code => {
       const h = code.html || "";
-      const hasComment = /<!--.*?-->/i.test(h);
-      const hasEntities = /&lt;|&gt;|&amp;|&quot;|&copy;/i.test(h);
-      if(hasComment && hasEntities)
-        return { pass:true, title:"Entities & Comments!", feedback:"Comment and entities detected." };
-      return { pass:false, title:"Incomplete", feedback:"Add a comment and at least 3 entities." };
+
+      const hasComment  = /<!--[\s\S]+?-->/i.test(h);
+      const meaningfulComment = /<!--\s*.{5,}\s*-->/i.test(h);
+
+      const entityList  = ["&lt;","&gt;","&amp;","&quot;","&copy;"];
+      const entitiesUsed = entityList.filter(e => h.includes(e));
+      const hasThreeEntities = entitiesUsed.length >= 3;
+
+      const ok = [hasComment, meaningfulComment, hasThreeEntities];
+
+      if (ok.every(Boolean)) return {
+        pass: true,
+        title: "Comments & Entities done!",
+        feedback: `Comment detected and ${entitiesUsed.length} entities used (${entitiesUsed.join(", ")}) — great job!`
+      };
+
+      const labels = [
+        "an HTML comment <!-- ... -->",
+        "a meaningful comment (at least 5 characters)",
+        "at least 3 different entities (&lt; &gt; &amp; &quot; &copy;)"
+      ];
+      return {
+        pass: false,
+        title: "Incomplete",
+        feedback: "Missing:\n" + labels.filter((_,i) => !ok[i]).map(x => " • " + x).join("\n")
+      };
     }
   }
 },
 
 {
-  id:10, icon:"[G]", type:"html", color:"#f97316",
-  title:"HTML Accessibility",
-  desc:"Best practices for accessible web content",
-  content:[
-    { type:"text", heading:"Accessible HTML",
-      body:`Accessibility ensures all users can access your content.<br>
-      Use semantic tags, descriptive <code>alt</code> text for images, <code>label</code> for inputs, and proper heading order.` },
-    { type:"points", heading:"Key Accessibility Tips",
-      points:[
-        "Use <code>&lt;alt&gt;</code> on images",
-        "Use <code>&lt;label&gt;</code> for form inputs",
-        "Use proper heading hierarchy (h1 → h2 → h3…) and avoid skipping levels",
-        "Ensure color contrast is sufficient",
-        "Provide captions for audio/video when possible"
-      ] },
-    { type:"code", heading:"Accessible Image & Form", file:"accessibility.html",
-      runnable:true,
-      html:`<img src="flower.jpg" alt="Red tulip in a garden">
-<form>
-  <label for="email">Email:</label>
-  <input type="email" id="email">
-  <button type="submit">Submit</button>
-</form>` },
+  "id":10,
+  "icon":"[G]",
+  "type":"html",
+  "color":"#f97316",
+  "title":"HTML Accessibility",
+  "desc":"Best practices for accessible web content",
+  "content":[
+    {
+      "type":"text",
+      "heading":"Why Accessibility Matters",
+      "body":"Accessibility ensures that **everyone can access your website**, including people with visual, auditory, or motor impairments. It makes your site usable by screen readers, keyboard-only users, and people with color blindness. Besides helping users, accessibility often improves SEO, usability, and overall design quality."
+    },
+    {
+      "type":"text",
+      "heading":"Accessible HTML Practices",
+      "body":"Some key practices include:<br>\
+      - Use **semantic HTML** tags (like <code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;footer&gt;</code>)<br>\
+      - Provide descriptive <code>alt</code> text for images<br>\
+      - Link <code>&lt;label&gt;</code> elements to form inputs with matching <code>for</code> and <code>id</code><br>\
+      - Maintain a proper heading hierarchy (h1 → h2 → h3…)<br>\
+      - Ensure sufficient color contrast for text and backgrounds<br>\
+      - Provide captions for videos and transcripts for audio"
+    },
+    {
+      "type":"code",
+      "heading":"Example: Accessible Image & Form",
+      "file":"accessibility.html",
+      "runnable":true,
+      "html":"<h2>Accessible Page Example</h2>\n<img src=\"flower.jpg\" alt=\"Red tulip in a garden\">\n<form>\n  <label for=\"email\">Email:</label>\n  <input type=\"email\" id=\"email\">\n  <label for=\"name\">Name:</label>\n  <input type=\"text\" id=\"name\">\n  <button type=\"submit\">Submit</button>\n</form>"
+    },
+    {
+      "type":"text",
+      "heading":"Real-life Scenario",
+      "body":"Imagine a visually impaired user browsing your site using a screen reader. Without <code>alt</code> text, an important image would just be \"invisible\" to them. Without <code>&lt;label&gt;</code>, form fields would be confusing. Accessibility ensures **everyone can understand and interact** with your content."
+    }
   ],
-  quiz:[
-    { q:"Which attribute improves image accessibility?",
-      choices:["title","alt","src","id"],
-      correct:1, explain:"alt provides descriptive text for screen readers." },
-    { q:"Why use <label> with inputs?",
-      choices:["No reason","Helps styling","Improves accessibility","Prevents errors"],
-      correct:2, explain:"Labels link text to inputs so screen readers can describe the input." },
+  "quiz":[
+    { "q":"Which attribute improves image accessibility?",
+      "choices":["title","alt","src","id"],
+      "correct":1,
+      "explain":"alt provides descriptive text for screen readers." },
+    { "q":"Why use <label> with inputs?",
+      "choices":["No reason","Helps styling","Improves accessibility","Prevents errors"],
+      "correct":2,
+      "explain":"Labels link text to inputs so screen readers can describe the input." },
+    { "q":"Why is heading hierarchy important?",
+      "choices":["For styling","For SEO","For accessibility and screen readers","It is not important"],
+      "correct":2,
+      "explain":"Proper heading hierarchy allows screen readers to navigate the page easily." },
+    { "q":"Who benefits from accessible web pages?",
+      "choices":["Only people with disabilities","Everyone, including keyboard and screen reader users","Only SEO bots","No one"],
+      "correct":1,
+      "explain":"Accessibility benefits everyone: people with disabilities, keyboard users, and even improves usability for all users." }
   ],
   challenge:{
     title:"Accessible Page",
     desc:"Make a mini page with an image (alt text) and a form (with labels).",
-    task:`Add an image with descriptive alt text and a small form with labeled inputs. Ensure semantic structure and accessibility.`,
+    task:`Add an <strong>&lt;img&gt;</strong> with a descriptive <strong>alt</strong> attribute, and a <strong>&lt;form&gt;</strong> with at least 2 inputs each linked to a <strong>&lt;label for="..."&gt;</strong> using matching <strong>id</strong> attributes.`,
     panes:["html","css"],
     starterHtml:`<img src="example.jpg" alt="Description here">
 <form>
   <label for="name">Name:</label>
   <input type="text" id="name">
 </form>`,
+    starterCss:`body { font-family: sans-serif; padding: 20px; }
+img { max-width: 100%; border-radius: 8px; margin-bottom: 16px; }
+label { display: block; margin-top: 10px; font-weight: bold; }
+input { padding: 6px; width: 100%; max-width: 300px; }`,
+    hint:"Use alt='describe the image here'. Link labels to inputs with matching for='id' and id='id' values.",
     checks: code => {
       const h = code.html || "";
-      const hasImg = /<img[^>]*alt=["'][^"']+["']/i.test(h);
-      const hasLabel = /<label[^>]*for=["'][^"']+["']/i.test(h);
-      if(hasImg && hasLabel) return { pass:true, title:"Accessible!", feedback:"Image with alt and labeled input found." };
-      return { pass:false, title:"Incomplete", feedback:"Add an image with alt and a form label." };
+
+      const hasImg            = /<img/i.test(h);
+      const hasAlt            = /<img[^>]*alt=["'][^"']{5,}["']/i.test(h);
+      const hasForm           = /<form/i.test(h);
+      const labelForMatches   = [...h.matchAll(/<label[^>]*for=["']([^"']+)["']/gi)].map(m => m[1]);
+      const inputIds          = [...h.matchAll(/<input[^>]*id=["']([^"']+)["']/gi)].map(m => m[1]);
+      const linkedCount       = labelForMatches.filter(f => inputIds.includes(f)).length;
+      const hasLinkedLabels   = linkedCount >= 2;
+      const hasButton         = /<button/i.test(h);
+
+      const ok = [hasImg, hasAlt, hasForm, hasLinkedLabels, hasButton];
+
+      if (ok.every(Boolean)) return {
+        pass: true,
+        title: "Accessible!",
+        feedback: `Image with descriptive alt text and ${linkedCount} properly linked label/input pair${linkedCount > 1 ? "s" : ""} found — great accessibility!`
+      };
+
+      const labels = [
+        "<img> element",
+        'descriptive alt text (5+ characters)',
+        "<form> element",
+        "2+ <label for='id'> linked to matching <input id='id'>",
+        "<button> to submit the form"
+      ];
+      return {
+        pass: false,
+        title: "Accessibility issues found",
+        feedback: "Missing:\n" + labels.filter((_,i) => !ok[i]).map(x => " • " + x).join("\n")
+      };
     }
   }
 },
@@ -964,19 +1265,19 @@ footer { background: #1e293b; color: #64748b; padding: 12px 20px; margin-top: 20
         explain: "The content property is only valid on ::before and ::after pseudo-elements — it inserts generated content."
       },
     ],
-    challenge: {
-      title: "Pseudo-element Decorations",
-      desc: "Use ::before, ::after, and pseudo-classes to style a list.",
-      task: `Style a navigation list using: <strong>::before</strong> to add an arrow icon before each link, <strong>:hover</strong> to change link color, <strong>:first-child</strong> to highlight the first item, and <strong>::after</strong> on the heading to add a decorative underline.`,
-      panes: ["html", "css"],
-      starterHtml: `<h2>Navigation</h2>
+   challenge: {
+  title: "Pseudo-element Decorations",
+  desc: "Use ::before, ::after, and pseudo-classes to style a list.",
+  task: `Style a navigation list using: <strong>::before</strong> to add an arrow icon before each link, <strong>:hover</strong> to change link color, <strong>:first-child</strong> to highlight the first item, and <strong>::after</strong> on the heading to add a decorative underline.`,
+  panes: ["html", "css"],
+  starterHtml: `<h2>Navigation</h2>
 <ul class="nav">
   <li><a href="#">Home</a></li>
   <li><a href="#">About</a></li>
   <li><a href="#">Projects</a></li>
   <li><a href="#">Contact</a></li>
 </ul>`,
-      starterCss: `body { font-family: sans-serif; background: #0f172a; color: white; padding: 24px; }
+  starterCss: `body { font-family: sans-serif; background: #0f172a; color: white; padding: 24px; }
 
 h2 {
   position: relative;
@@ -1010,24 +1311,55 @@ h2::after {
 .nav li:first-child a {
   /* Highlight first link */
 }`,
-      starterJs: ``,
-      hint: `a::before { content: "→ "; } and h2::after { height: 3px; background: #3b82f6; }`,
-      checks: code => {
-        const c = code.css || "";
-        const hasAfter   = /::after\s*\{[^}]+content/i.test(c) || /h2::after\s*\{[^}]+\}/i.test(c);
-        const hasBefore  = /::before\s*\{[^}]*content\s*:/i.test(c);
-        const hasHover   = /:hover\s*\{[^}]+\}/i.test(c);
-        const hasFirst   = /:first-child/i.test(c);
-        if (hasAfter && hasBefore && hasHover && hasFirst)
-          return { pass: true, title: "Pseudo-mastery unlocked!", feedback: "::before, ::after, :hover and :first-child all used — perfect!" };
-        const m = [];
-        if (!hasBefore) m.push("::before with content property");
-        if (!hasAfter)  m.push("::after with content property");
-        if (!hasHover)  m.push(":hover pseudo-class");
-        if (!hasFirst)  m.push(":first-child pseudo-class");
-        return { pass: false, title: "Keep going!", feedback: "Missing:\n" + m.map(x => " • " + x).join("\n") };
-      }
-    }
+  starterJs: ``,
+  hint: `a::before { content: "→ "; } and h2::after { height: 3px; background: #3b82f6; }`,
+  checks: code => {
+    const c = code.css || "";
+
+    const hasBefore        = /::before\s*\{[^}]*content\s*:/i.test(c);
+    const hasBeforeContent = /::before\s*\{[^}]*content\s*:\s*["'][^"']+["']/i.test(c);
+    const hasAfter         = /::after\s*\{[^}]+\}/i.test(c);
+    const hasAfterContent  = /::after\s*\{[^}]*content\s*:/i.test(c);
+    const hasHover         = /:hover\s*\{[^}]+\}/i.test(c);
+    const hasHoverColor    = /:hover\s*\{[^}]*(color|background)[^}]*\}/i.test(c);
+    const hasFirstChild    = /:first-child/i.test(c);
+    const hasNavLink       = /\.nav\s+a|\.nav\s*li\s+a/i.test(c);
+    const hasColor         = /\.nav[^{]*a[^{]*\{[^}]*color\s*:/i.test(c) || /\.nav\s+a\s*\{[^}]*color/i.test(c);
+
+    const ok = [
+      hasBefore,
+      hasBeforeContent,
+      hasAfter,
+      hasHover,
+      hasHoverColor,
+      hasFirstChild,
+      hasNavLink,
+      hasColor
+    ];
+
+    if (ok.every(Boolean)) return {
+      pass: true,
+      title: "Pseudo-mastery unlocked!",
+      feedback: "::before with content, ::after, :hover with color change, and :first-child all used — perfect!"
+    };
+
+    const labels = [
+      "::before pseudo-element",
+      '::before must have a non-empty content: "→ " or similar',
+      "::after pseudo-element on h2",
+      ":hover pseudo-class",
+      ":hover must change color or background",
+      ":first-child pseudo-class",
+      ".nav a link selector",
+      "color on .nav links"
+    ];
+    return {
+      pass: false,
+      title: "Keep going!",
+      feedback: "Missing:\n" + labels.filter((_,i) => !ok[i]).map(x => " • " + x).join("\n")
+    };
+  }
+},
   },
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -1174,12 +1506,12 @@ h2::after {
         explain: "inline-block flows with text like inline but respects width, height, and all margin/padding."
       }
     ],
-    challenge: {
-      title: "Box Model Cards",
-      desc: "Create polished cards using every layer of the box model.",
-      task: `Build 3 cards using <strong>.card</strong>. Apply <strong>padding</strong>, <strong>margin</strong>, <strong>border</strong>, and <strong>border-radius</strong>. Include <code>* { box-sizing: border-box; }</code>. Add a <strong>::before</strong> pseudo-element on .card to add a coloured top accent bar.`,
-      panes: ["html", "css"],
-      starterHtml: `<div class="card">
+   challenge: {
+  title: "Box Model Cards",
+  desc: "Create polished cards using every layer of the box model.",
+  task: `Build 3 cards using <strong>.card</strong>. Apply <strong>padding</strong>, <strong>margin</strong>, <strong>border</strong>, and <strong>border-radius</strong>. Include <code>* { box-sizing: border-box; }</code>. Add a <strong>::before</strong> pseudo-element on .card to add a coloured top accent bar.`,
+  panes: ["html", "css"],
+  starterHtml: `<div class="card">
   <h3>Card One</h3>
   <p>Padding creates breathing room inside</p>
 </div>
@@ -1191,7 +1523,7 @@ h2::after {
   <h3>Card Three</h3>
   <p>Margin separates cards from each other</p>
 </div>`,
-      starterCss: `*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  starterCss: `*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: sans-serif; padding: 20px; background: #f1f5f9; }
 
 .card {
@@ -1210,30 +1542,62 @@ body { font-family: sans-serif; padding: 20px; background: #f1f5f9; }
 .card h3 {
   /* margin-top to clear the accent bar */
 }`,
-      starterJs: ``,
-      hint: ".card::before { height: 4px; background: #3b82f6; } and add padding-top to .card",
-      checks: code => {
-        const c = code.css || "";
-        const hasCard    = /\.card\s*\{[^}]+\}/i.test(c);
-        const hasPad     = /padding\s*:/i.test(c);
-        const hasMargin  = /margin/i.test(c);
-        const hasBorder  = /border\s*:/i.test(c);
-        const hasBRadius = /border-radius\s*:/i.test(c);
-        const hasBBox    = /box-sizing\s*:\s*border-box/i.test(c);
-        const hasBefore  = /::before\s*\{[^}]+\}/i.test(c);
-        if (hasCard && hasPad && hasMargin && hasBorder && hasBRadius && hasBBox && hasBefore)
-          return { pass: true, title: "Box model mastered!", feedback: "padding, margin, border, border-radius, border-box and ::before — flawless!" };
-        const m = [];
-        if (!hasCard)    m.push(".card selector with styles");
-        if (!hasPad)     m.push("padding property");
-        if (!hasMargin)  m.push("margin property");
-        if (!hasBorder)  m.push("border property");
-        if (!hasBRadius) m.push("border-radius property");
-        if (!hasBBox)    m.push("* { box-sizing: border-box }");
-        if (!hasBefore)  m.push(".card::before pseudo-element");
-        return { pass: false, title: "Box model needs work", feedback: "Missing:\n" + m.map(x => " • " + x).join("\n") };
-      }
-    }
+  starterJs: ``,
+  hint: ".card::before { height: 4px; background: #3b82f6; } and add padding-top to .card",
+  checks: code => {
+    const c = code.css || "";
+    const h = code.html || "";
+
+    const hasCardSelector = /\.card\s*\{[^}]+\}/i.test(c);
+    const hasPadding      = /\.card\s*\{[^}]*padding\s*:/i.test(c);
+    const hasMargin       = /\.card\s*\{[^}]*margin\s*:/i.test(c);
+    const hasBorder       = /\.card\s*\{[^}]*border\s*:/i.test(c);
+    const hasBorderRadius = /\.card\s*\{[^}]*border-radius\s*:/i.test(c);
+    const hasBorderBox    = /box-sizing\s*:\s*border-box/i.test(c);
+    const hasBefore       = /\.card::before\s*\{[^}]+\}/i.test(c);
+    const hasBeforeHeight = /\.card::before\s*\{[^}]*height\s*:/i.test(c);
+    const hasBeforeBg     = /\.card::before\s*\{[^}]*background/i.test(c);
+    const cardCount       = (h.match(/class=["']card["']/gi) || []).length;
+    const hasThreeCards   = cardCount >= 3;
+
+    const ok = [
+      hasCardSelector,
+      hasPadding,
+      hasMargin,
+      hasBorder,
+      hasBorderRadius,
+      hasBorderBox,
+      hasBefore,
+      hasBeforeHeight,
+      hasBeforeBg,
+      hasThreeCards
+    ];
+
+    if (ok.every(Boolean)) return {
+      pass: true,
+      title: "Box model mastered!",
+      feedback: `All ${cardCount} cards have padding, margin, border, border-radius, border-box sizing, and a ::before accent bar — flawless!`
+    };
+
+    const labels = [
+      ".card selector with styles",
+      "padding on .card",
+      "margin on .card",
+      "border on .card",
+      "border-radius on .card",
+      "* { box-sizing: border-box }",
+      ".card::before pseudo-element",
+      "height on .card::before (for the accent bar)",
+      "background color on .card::before",
+      "3 cards with class='card' in HTML"
+    ];
+    return {
+      pass: false,
+      title: "Box model needs work",
+      feedback: "Missing:\n" + labels.filter((_,i) => !ok[i]).map(x => " • " + x).join("\n")
+    };
+  }
+},
   },
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -1386,18 +1750,19 @@ body { font-family: sans-serif; padding: 20px; background: #f1f5f9; }
         explain: "clamp(min, preferred, max) creates fluid values that scale between a min and max — perfect for responsive typography."
       }
     ],
-    challenge: {
-      title: "Themed Typography Card",
-      desc: "Build a styled card using CSS variables and full typography control.",
-      task: `Create a dark-themed card using <strong>CSS custom properties</strong> (at least 3 variables in :root). Style a heading with <code>letter-spacing</code> and <code>font-weight</code>, a paragraph with <code>line-height</code>, and a code tag with a <code>monospace</code> font. Add a <code>text-transform: uppercase</code> label.`,
-      panes: ["html", "css"],
-      starterHtml: `<div class="card">
+   // id: 13 challenge
+challenge: {
+  title: "Themed Typography Card",
+  desc: "Build a styled card using CSS variables and full typography control.",
+  task: `Create a dark-themed card using <strong>CSS custom properties</strong> (at least 3 variables in :root). Style a heading with <code>letter-spacing</code> and <code>font-weight</code>, a paragraph with <code>line-height</code>, and a code tag with a <code>monospace</code> font. Add a <code>text-transform: uppercase</code> label.`,
+  panes: ["html", "css"],
+  starterHtml: `<div class="card">
   <span class="label">Tutorial</span>
   <h2>CSS Variables</h2>
   <p>Define once, use everywhere. Variables make theming a one-line change across your entire project.</p>
   <code>:root { --primary: #3b82f6; }</code>
 </div>`,
-      starterCss: `@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap');
+  starterCss: `@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&display=swap');
 
 :root {
   /* Define at least 3 CSS variables here */
@@ -1424,28 +1789,75 @@ p {
 code {
   /* monospace font, background, padding, color */
 }`,
-      starterJs: ``,
-      hint: ":root { --bg: #1e293b; --text: #f0f9ff; --accent: #3b82f6; } then use var(--accent) in rules",
-      checks: code => {
-        const c = code.css || "";
-        const hasVars     = /--[a-z]/i.test(c);
-        const hasVarUse   = /var\(--/i.test(c);
-        const hasH2       = /h2\s*\{[^}]+\}/i.test(c);
-        const hasP        = /p\s*\{[^}]*(line-height|color)[^}]*\}/i.test(c);
-        const hasCode     = /code\s*\{[^}]+\}/i.test(c);
-        const hasLabel    = /\.label\s*\{[^}]+\}/i.test(c) || /text-transform/i.test(c);
-        if (hasVars && hasVarUse && hasH2 && hasP && hasCode && hasLabel)
-          return { pass: true, title: "Typography themed!", feedback: "CSS variables, h2, paragraph, code, and label all styled — excellent!" };
-        const m = [];
-        if (!hasVars)   m.push("CSS custom properties (--variable: value in :root)");
-        if (!hasVarUse) m.push("Using variables with var(--name)");
-        if (!hasH2)     m.push("h2 styled with font/letter-spacing");
-        if (!hasP)      m.push("p with line-height or color");
-        if (!hasCode)   m.push("code with monospace font");
-        if (!hasLabel)  m.push(".label with text-transform: uppercase");
-        return { pass: false, title: "Typography needs more", feedback: "Missing:\n" + m.map(x => " • " + x).join("\n") };
-      }
-    }
+  starterJs: ``,
+  hint: ":root { --bg: #1e293b; --text: #f0f9ff; --accent: #3b82f6; } then use var(--accent) in rules",
+  checks: code => {
+    const c = code.css || "";
+
+    // CSS variables
+    const varDefs       = [...c.matchAll(/--[a-zA-Z][\w-]*\s*:/g)];
+    const hasThreeVars  = varDefs.length >= 3;
+    const hasVarUse     = /var\(--[a-zA-Z]/i.test(c);
+
+    // h2 typography
+    const hasH2         = /h2\s*\{[^}]+\}/i.test(c);
+    const hasLetterSpc  = /h2\s*\{[^}]*letter-spacing\s*:/i.test(c);
+    const hasH2Weight   = /h2\s*\{[^}]*font-weight\s*:/i.test(c);
+
+    // paragraph
+    const hasPLineH     = /p\s*\{[^}]*line-height\s*:/i.test(c);
+
+    // code monospace
+    const hasCode       = /code\s*\{[^}]+\}/i.test(c);
+    const hasMonospace  = /code\s*\{[^}]*font-family\s*:[^}]*(monospace|mono|Mono)/i.test(c);
+
+    // label uppercase
+    const hasLabel      = /\.label\s*\{[^}]+\}/i.test(c);
+    const hasUppercase  = /\.label\s*\{[^}]*text-transform\s*:\s*uppercase/i.test(c);
+
+    // card styled
+    const hasCard       = /\.card\s*\{[^}]+\}/i.test(c);
+
+    const ok = [
+      hasThreeVars,
+      hasVarUse,
+      hasH2,
+      hasLetterSpc,
+      hasH2Weight,
+      hasPLineH,
+      hasCode,
+      hasMonospace,
+      hasLabel,
+      hasUppercase,
+      hasCard
+    ];
+
+    if (ok.every(Boolean)) return {
+      pass: true,
+      title: "Typography themed!",
+      feedback: `${varDefs.length} CSS variables defined, h2 with letter-spacing & font-weight, paragraph line-height, monospace code, and uppercase label — excellent!`
+    };
+
+    const labels = [
+      "at least 3 CSS custom properties (--name: value) in :root",
+      "using variables with var(--name)",
+      "h2 selector with styles",
+      "letter-spacing on h2",
+      "font-weight on h2",
+      "line-height on p",
+      "code selector with styles",
+      "monospace font-family on code",
+      ".label selector with styles",
+      "text-transform: uppercase on .label",
+      ".card selector with styles"
+    ];
+    return {
+      pass: false,
+      title: "Typography needs more work",
+      feedback: "Missing:\n" + labels.filter((_,i) => !ok[i]).map(x => " • " + x).join("\n")
+    };
+  }
+},
   },
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -1635,12 +2047,13 @@ code {
         explain: "align-self overrides the container's align-items for a single flex item."
       }
     ],
-    challenge: {
-      title: "Dashboard Layout",
-      desc: "Build a full-page dashboard using only Flexbox.",
-      task: `Create a page layout with: a <strong>header</strong>, a middle area with a fixed-width <strong>sidebar</strong> (use <code>flex-shrink: 0</code>) and a growing <strong>main</strong> area (use <code>flex: 1</code>), and a <strong>footer</strong>. Use <code>flex-direction: column</code> on the body wrapper.`,
-      panes: ["html", "css"],
-      starterHtml: `<div class="app">
+   // id: 14 challenge
+challenge: {
+  title: "Dashboard Layout",
+  desc: "Build a full-page dashboard using only Flexbox.",
+  task: `Create a page layout with: a <strong>header</strong>, a middle area with a fixed-width <strong>sidebar</strong> (use <code>flex-shrink: 0</code>) and a growing <strong>main</strong> area (use <code>flex: 1</code>), and a <strong>footer</strong>. Use <code>flex-direction: column</code> on the body wrapper.`,
+  panes: ["html", "css"],
+  starterHtml: `<div class="app">
   <header class="header">My Dashboard</header>
   <div class="body">
     <nav class="sidebar">
@@ -1655,7 +2068,7 @@ code {
   </div>
   <footer class="footer">© 2025</footer>
 </div>`,
-      starterCss: `*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  starterCss: `*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: sans-serif; }
 
 .app {
@@ -1671,7 +2084,6 @@ body { font-family: sans-serif; }
 .body {
   display: flex;
   flex: 1;
-  /* this row contains sidebar + main */
 }
 
 .sidebar {
@@ -1683,7 +2095,6 @@ body { font-family: sans-serif; }
 
 .sidebar a {
   text-decoration: none;
-  /* style links */
 }
 
 .main {
@@ -1694,25 +2105,79 @@ body { font-family: sans-serif; }
 .footer {
   /* style the footer */
 }`,
-      starterJs: ``,
-      hint: ".sidebar { flex-shrink: 0; flex-basis: 200px; } and .main { flex: 1; }",
-      checks: code => {
-        const c = code.css || "";
-        const hasFlexCol   = /flex-direction\s*:\s*column/i.test(c);
-        const hasFlex1     = /flex\s*:\s*1/i.test(c);
-        const hasShrink0   = /flex-shrink\s*:\s*0/i.test(c);
-        const hasBodyFlex  = /\.body\s*\{[^}]*display\s*:\s*flex/i.test(c);
-        const hasMinH      = /min-height\s*:\s*100vh/i.test(c);
-        if (hasFlexCol && hasFlex1 && hasShrink0 && hasBodyFlex)
-          return { pass: true, title: "Dashboard flexed!", feedback: "flex-direction: column, flex: 1, flex-shrink: 0, and .body display: flex — full layout done!" };
-        const m = [];
-        if (!hasFlexCol)  m.push("flex-direction: column on .app");
-        if (!hasBodyFlex) m.push("display: flex on .body");
-        if (!hasFlex1)    m.push("flex: 1 on .main");
-        if (!hasShrink0)  m.push("flex-shrink: 0 on .sidebar");
-        return { pass: false, title: "Layout incomplete", feedback: "Missing:\n" + m.map(x => " • " + x).join("\n") };
-      }
-    }
+  starterJs: ``,
+  hint: ".sidebar { flex-shrink: 0; flex-basis: 200px; } and .main { flex: 1; }",
+  checks: code => {
+    const c = code.css || "";
+    const h = code.html || "";
+
+    // Structure checks
+    const hasAppFlex    = /\.app\s*\{[^}]*display\s*:\s*flex/i.test(c);
+    const hasFlexCol    = /\.app\s*\{[^}]*flex-direction\s*:\s*column/i.test(c);
+    const hasMinH       = /min-height\s*:\s*100vh/i.test(c);
+    const hasBodyFlex   = /\.body\s*\{[^}]*display\s*:\s*flex/i.test(c);
+
+    // Sidebar checks
+    const hasShrink0    = /\.sidebar\s*\{[^}]*flex-shrink\s*:\s*0/i.test(c);
+    const hasSideWidth  = /\.sidebar\s*\{[^}]*(width|flex-basis)\s*:/i.test(c);
+    const hasSideLinks  = /\.sidebar\s+a\s*\{[^}]+\}/i.test(c);
+
+    // Main checks
+    const hasMainFlex1  = /\.main\s*\{[^}]*flex\s*:\s*1/i.test(c);
+    const hasMainPad    = /\.main\s*\{[^}]*padding\s*:/i.test(c);
+
+    // Header / footer styled
+    const hasHeader     = /\.header\s*\{[^}]+\}/i.test(c);
+    const hasFooter     = /\.footer\s*\{[^}]+\}/i.test(c);
+
+    // HTML structure checks
+    const hasAllSections = /class=["']header["']/.test(h) &&
+                           /class=["']sidebar["']/.test(h) &&
+                           /class=["']main["']/.test(h) &&
+                           /class=["']footer["']/.test(h);
+
+    const ok = [
+      hasAppFlex,
+      hasFlexCol,
+      hasMinH,
+      hasBodyFlex,
+      hasShrink0,
+      hasSideWidth,
+      hasSideLinks,
+      hasMainFlex1,
+      hasMainPad,
+      hasHeader,
+      hasFooter,
+      hasAllSections
+    ];
+
+    if (ok.every(Boolean)) return {
+      pass: true,
+      title: "Dashboard flexed!",
+      feedback: "flex-direction: column on .app, display: flex on .body, flex-shrink: 0 sidebar, flex: 1 main, styled header/footer — full layout complete!"
+    };
+
+    const labels = [
+      "display: flex on .app",
+      "flex-direction: column on .app",
+      "min-height: 100vh on .app",
+      "display: flex on .body",
+      "flex-shrink: 0 on .sidebar",
+      "width or flex-basis on .sidebar",
+      ".sidebar a links styled",
+      "flex: 1 on .main",
+      "padding on .main",
+      ".header styled",
+      ".footer styled",
+      "all 4 sections in HTML (header, sidebar, main, footer)"
+    ];
+    return {
+      pass: false,
+      title: "Layout incomplete",
+      feedback: "Missing:\n" + labels.filter((_,i) => !ok[i]).map(x => " • " + x).join("\n")
+    };
+  }
+},
   },
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -1931,12 +2396,12 @@ body { font-family: sans-serif; }
         explain: "gap (or row-gap / column-gap) sets space between grid tracks. It's cleaner than using margins on items."
       }
     ],
-    challenge: {
-      title: "Named Area Page Layout",
-      desc: "Build a complete page layout using grid-template-areas.",
-      task: `Create a page with <strong>header</strong>, <strong>sidebar</strong>, <strong>main</strong>, and <strong>footer</strong> using <code>grid-template-areas</code>. Make it <strong>responsive</strong> — on mobile (<code>max-width: 600px</code>) stack sidebar below main using a new template area string. Add a card grid inside main using <code>auto-fill</code> + <code>minmax</code>.`,
-      panes: ["html", "css"],
-      starterHtml: `<div class="page">
+   challenge: {
+  title: "Named Area Page Layout",
+  desc: "Build a complete page layout using grid-template-areas.",
+  task: `Create a page with <strong>header</strong>, <strong>sidebar</strong>, <strong>main</strong>, and <strong>footer</strong> using <code>grid-template-areas</code>. Make it <strong>responsive</strong> — on mobile (<code>max-width: 600px</code>) stack sidebar below main using a new template area string. Add a card grid inside main using <code>auto-fill</code> + <code>minmax</code>.`,
+  panes: ["html", "css"],
+  starterHtml: `<div class="page">
   <header class="header">Site Header</header>
   <aside class="sidebar">
     <h3>Sidebar</h3>
@@ -1953,7 +2418,7 @@ body { font-family: sans-serif; }
   </main>
   <footer class="footer">Site Footer</footer>
 </div>`,
-      starterCss: `*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  starterCss: `*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: sans-serif; background: #f1f5f9; padding: 12px; }
 
 .page {
@@ -1989,30 +2454,118 @@ body { font-family: sans-serif; background: #f1f5f9; padding: 12px; }
       /* rewrite for mobile — sidebar below main */
   }
 }`,
-      starterJs: ``,
-      hint: `cards: repeat(auto-fill, minmax(120px, 1fr)). Mobile areas: "header" "main" "sidebar" "footer"`,
-      checks: code => {
-        const c = code.css || "";
-        const hasGrid    = /display\s*:\s*grid/i.test(c);
-        const hasAreas   = /grid-template-areas/i.test(c);
-        const hasGArea   = /grid-area\s*:/i.test(c);
-        const hasMedia   = /@media/i.test(c);
-        const hasAutoFill = /auto-fill|auto-fit/i.test(c);
-        const hasMinmax  = /minmax/i.test(c);
-        const hasGap     = /gap\s*:/i.test(c);
-        if (hasGrid && hasAreas && hasGArea && hasMedia && hasAutoFill && hasMinmax)
-          return { pass: true, title: "Grid layout complete!", feedback: "Named areas, grid-area assignment, responsive media query, and auto-fill cards — excellent!" };
-        const m = [];
-        if (!hasGrid)     m.push("display: grid on .page");
-        if (!hasAreas)    m.push("grid-template-areas");
-        if (!hasGArea)    m.push("grid-area on children (.header, .sidebar etc.)");
-        if (!hasMedia)    m.push("@media query for mobile layout");
-        if (!hasAutoFill) m.push("auto-fill or auto-fit in .cards");
-        if (!hasMinmax)   m.push("minmax() in .cards grid");
-        if (!hasGap)      m.push("gap property");
-        return { pass: false, title: "Grid needs work", feedback: "Missing:\n" + m.map(x => " • " + x).join("\n") };
-      }
-    }
+  starterJs: ``,
+  hint: `cards: repeat(auto-fill, minmax(120px, 1fr)). Mobile areas: "header" "main" "sidebar" "footer"`,
+  checks: code => {
+    const c = code.css || "";
+    const h = code.html || "";
+
+    // Page grid setup
+    const hasPageGrid      = /\.page\s*\{[^}]*display\s*:\s*grid/i.test(c);
+    const hasTemplateAreas = /grid-template-areas\s*:/i.test(c);
+    const hasTemplateCols  = /\.page\s*\{[^}]*grid-template-columns\s*:/i.test(c);
+    const hasMinHeight     = /min-height\s*:\s*100vh/i.test(c);
+    const hasGap           = /\.page\s*\{[^}]*gap\s*:/i.test(c);
+
+    // All 4 grid-area assignments
+    const hasHeaderArea    = /\.header\s*\{[^}]*grid-area\s*:\s*header/i.test(c);
+    const hasSidebarArea   = /\.sidebar\s*\{[^}]*grid-area\s*:\s*sidebar/i.test(c);
+    const hasMainArea      = /\.main\s*\{[^}]*grid-area\s*:\s*main/i.test(c);
+    const hasFooterArea    = /\.footer\s*\{[^}]*grid-area\s*:\s*footer/i.test(c);
+
+    // All 4 sections styled beyond just grid-area
+    const hasHeaderStyle   = /\.header\s*\{[^}]*(background|padding|color)[^}]*\}/i.test(c);
+    const hasSidebarStyle  = /\.sidebar\s*\{[^}]*(background|padding|color)[^}]*\}/i.test(c);
+    const hasMainStyle     = /\.main\s*\{[^}]*(background|padding|color)[^}]*\}/i.test(c);
+    const hasFooterStyle   = /\.footer\s*\{[^}]*(background|padding|color)[^}]*\}/i.test(c);
+
+    // Cards grid
+    const hasCardsGrid     = /\.cards\s*\{[^}]*display\s*:\s*grid/i.test(c);
+    const hasAutoFill      = /auto-fill|auto-fit/i.test(c);
+    const hasMinmax        = /minmax\s*\(/i.test(c);
+    const hasCardsGap      = /\.cards\s*\{[^}]*gap\s*:/i.test(c);
+    const hasCardStyle     = /\.card\s*\{[^}]*(background|padding|border-radius)[^}]*\}/i.test(c);
+
+    // Responsive media query
+    const hasMedia         = /@media\s*\([^)]*max-width\s*:\s*600px/i.test(c);
+    const hasMediaAreas    = /@media[\s\S]*grid-template-areas/i.test(c);
+    const hasMediaCols     = /@media[\s\S]*grid-template-columns\s*:\s*1fr/i.test(c);
+    const hasMobileStack   = /@media[\s\S]*(sidebar[\s\S]*main|main[\s\S]*sidebar)/i.test(c);
+
+    // HTML structure
+    const hasAllSections   = /class=["']header["']/.test(h) &&
+                             /class=["']sidebar["']/.test(h) &&
+                             /class=["']main["']/.test(h) &&
+                             /class=["']footer["']/.test(h);
+    const hasCards         = (h.match(/class=["']card["']/g) || []).length >= 3;
+
+    const ok = [
+      hasPageGrid,
+      hasTemplateAreas,
+      hasTemplateCols,
+      hasMinHeight,
+      hasGap,
+      hasHeaderArea,
+      hasSidebarArea,
+      hasMainArea,
+      hasFooterArea,
+      hasHeaderStyle,
+      hasSidebarStyle,
+      hasMainStyle,
+      hasFooterStyle,
+      hasCardsGrid,
+      hasAutoFill,
+      hasMinmax,
+      hasCardsGap,
+      hasCardStyle,
+      hasMedia,
+      hasMediaAreas,
+      hasMediaCols,
+      hasMobileStack,
+      hasAllSections,
+      hasCards
+    ];
+
+    if (ok.every(Boolean)) return {
+      pass: true,
+      title: "Grid layout complete!",
+      feedback: "Named areas, all 4 grid-area assignments, styled sections, auto-fill card grid, and responsive mobile layout — excellent work!"
+    };
+
+    const labels = [
+      "display: grid on .page",
+      "grid-template-areas on .page",
+      "grid-template-columns on .page",
+      "min-height: 100vh on .page",
+      "gap on .page",
+      "grid-area: header on .header",
+      "grid-area: sidebar on .sidebar",
+      "grid-area: main on .main",
+      "grid-area: footer on .footer",
+      ".header styled (background/padding/color)",
+      ".sidebar styled (background/padding/color)",
+      ".main styled (background/padding/color)",
+      ".footer styled (background/padding/color)",
+      "display: grid on .cards",
+      "auto-fill or auto-fit in .cards",
+      "minmax() in .cards",
+      "gap on .cards",
+      ".card styled (background/padding/border-radius)",
+      "@media (max-width: 600px) query",
+      "grid-template-areas inside @media",
+      "grid-template-columns: 1fr inside @media (single column)",
+      "sidebar and main reordered in mobile layout",
+      "all 4 sections in HTML (header, sidebar, main, footer)",
+      "at least 3 .card elements in HTML"
+    ];
+
+    return {
+      pass: false,
+      title: "Grid needs work",
+      feedback: "Missing:\n" + labels.filter((_,i) => !ok[i]).map(x => " • " + x).join("\n")
+    };
+  }
+},
   },
   // ============================================================
 //  CSS LESSONS 16–20
@@ -2208,12 +2761,13 @@ body { font-family: sans-serif; background: #f1f5f9; padding: 12px; }
         explain: "animation-iteration-count: infinite makes the animation cycle repeat indefinitely until the element is removed or the animation is paused."
       }
     ],
-    challenge: {
-      title: "Animated UI Components",
-      desc: "Build hover effects and a loading spinner using transitions and @keyframes.",
-      task: `Create: (1) a <strong>button</strong> with a smooth <code>transition</code> on hover (change color + lift with <code>translateY</code>), (2) a <strong>card</strong> that scales up on hover, (3) a <strong>loading spinner</strong> using <code>@keyframes</code> with infinite rotation, (4) stagger at least 3 list items using <code>animation-delay</code>.`,
-      panes: ["html", "css"],
-      starterHtml: `<div class="container">
+   // id: 16 challenge
+challenge: {
+  title: "Animated UI Components",
+  desc: "Build hover effects and a loading spinner using transitions and @keyframes.",
+  task: `Create: (1) a <strong>button</strong> with a smooth <code>transition</code> on hover (change color + lift with <code>translateY</code>), (2) a <strong>card</strong> that scales up on hover, (3) a <strong>loading spinner</strong> using <code>@keyframes</code> with infinite rotation, (4) stagger at least 3 list items using <code>animation-delay</code>.`,
+  panes: ["html", "css"],
+  starterHtml: `<div class="container">
   <button class="btn">Hover Me</button>
 
   <div class="card">
@@ -2229,7 +2783,7 @@ body { font-family: sans-serif; background: #f1f5f9; padding: 12px; }
     <div class="item">Item Three</div>
   </div>
 </div>`,
-      starterCss: `body { font-family: sans-serif; background: #0f172a; color: white; padding: 24px; }
+  starterCss: `body { font-family: sans-serif; background: #0f172a; color: white; padding: 24px; }
 .container { display: flex; flex-direction: column; gap: 16px; max-width: 400px; }
 
 .btn {
@@ -2260,28 +2814,94 @@ body { font-family: sans-serif; background: #f1f5f9; padding: 12px; }
 .item:nth-child(1) { /* delay 0s */ }
 .item:nth-child(2) { /* delay 0.15s */ }
 .item:nth-child(3) { /* delay 0.3s */ }`,
-      starterJs: ``,
-      hint: ".spinner { animation: spin 0.8s linear infinite; } .btn { transition: background 0.3s ease, transform 0.2s ease; }",
-      checks: code => {
-        const c = code.css || "";
-        const hasTransition = /transition\s*:/i.test(c);
-        const hasTransform  = /transform\s*:/i.test(c);
-        const hasKeyframes  = /@keyframes/i.test(c);
-        const hasAnimation  = /animation\s*:/i.test(c);
-        const hasInfinite   = /infinite/i.test(c);
-        const hasDelay      = /animation-delay/i.test(c);
-        if (hasTransition && hasTransform && hasKeyframes && hasAnimation && hasInfinite && hasDelay)
-          return { pass: true, title: "Animations mastered!", feedback: "transition, transform, @keyframes, infinite spin, and staggered delays — full marks!" };
-        const m = [];
-        if (!hasTransition) m.push("transition on .btn or .card");
-        if (!hasTransform)  m.push("transform (translateY or scale) on hover");
-        if (!hasKeyframes)  m.push("@keyframes block");
-        if (!hasAnimation)  m.push("animation property on .spinner or .item");
-        if (!hasInfinite)   m.push("infinite on spinner animation");
-        if (!hasDelay)      m.push("animation-delay on .item:nth-child()");
-        return { pass: false, title: "Not quite there", feedback: "Missing:\n" + m.map(x => " • " + x).join("\n") };
-      }
-    }
+  starterJs: ``,
+  hint: ".spinner { animation: spin 0.8s linear infinite; } .btn { transition: background 0.3s ease, transform 0.2s ease; }",
+  checks: code => {
+    const c = code.css || "";
+    const h = code.html || "";
+
+    // Button transition
+    const hasBtnTransition    = /\.btn\s*\{[^}]*transition\s*:/i.test(c);
+    const hasBtnHover         = /\.btn\s*:\s*hover\s*\{[^}]+\}/i.test(c);
+    const hasBtnTranslateY    = /\.btn\s*:\s*hover\s*\{[^}]*translateY/i.test(c);
+    const hasBtnHoverColor    = /\.btn\s*:\s*hover\s*\{[^}]*(background|color)\s*:/i.test(c);
+
+    // Card hover scale
+    const hasCardTransition   = /\.card\s*\{[^}]*transition\s*:/i.test(c);
+    const hasCardHover        = /\.card\s*:\s*hover\s*\{[^}]+\}/i.test(c);
+    const hasCardScale        = /\.card\s*:\s*hover\s*\{[^}]*scale\s*\(/i.test(c);
+
+    // Spinner keyframes + animation
+    const hasSpinKeyframe     = /@keyframes\s+\w+\s*\{[^}]*(rotate|360)/i.test(c);
+    const hasSpinnerAnimation = /\.spinner\s*\{[^}]*animation\s*:/i.test(c);
+    const hasInfinite         = /\.spinner\s*\{[^}]*infinite/i.test(c) ||
+                                /\.spinner\s*\{[^}]*animation[^}]*infinite/i.test(c);
+    const hasLinear           = /\.spinner\s*\{[^}]*linear/i.test(c);
+
+    // fadeUp keyframe
+    const hasFadeKeyframe     = /@keyframes\s+(fadeUp|slideUp|fade)\s*\{/i.test(c);
+    const hasItemAnimation    = /\.item\s*\{[^}]*animation\s*:/i.test(c);
+
+    // Staggered delays — check for at least 2 nth-child delays
+    const delayMatches        = [...c.matchAll(/\.item\s*:\s*nth-child\(\d+\)\s*\{[^}]*animation-delay\s*:/gi)];
+    const hasStaggeredDelays  = delayMatches.length >= 2;
+
+    // HTML structure
+    const hasSpinnerEl        = /class=["']spinner["']/.test(h);
+    const itemCount           = (h.match(/class=["']item["']/g) || []).length;
+    const hasThreeItems       = itemCount >= 3;
+
+    const ok = [
+      hasBtnTransition,
+      hasBtnHover,
+      hasBtnTranslateY,
+      hasBtnHoverColor,
+      hasCardTransition,
+      hasCardHover,
+      hasCardScale,
+      hasSpinKeyframe,
+      hasSpinnerAnimation,
+      hasInfinite,
+      hasLinear,
+      hasFadeKeyframe,
+      hasItemAnimation,
+      hasStaggeredDelays,
+      hasSpinnerEl,
+      hasThreeItems
+    ];
+
+    if (ok.every(Boolean)) return {
+      pass: true,
+      title: "Animations mastered!",
+      feedback: `Button transition with translateY, card scale hover, infinite spinning loader, and ${delayMatches.length} staggered item delays — full marks!`
+    };
+
+    const labels = [
+      "transition on .btn",
+      ".btn:hover styles",
+      "translateY on .btn:hover (lift effect)",
+      "background or color change on .btn:hover",
+      "transition on .card",
+      ".card:hover styles",
+      "scale() on .card:hover",
+      "@keyframes with rotation (rotate/360deg) for spinner",
+      "animation on .spinner",
+      "infinite on .spinner animation",
+      "linear timing on .spinner (for smooth spin)",
+      "@keyframes fadeUp or slideUp for list items",
+      "animation on .item",
+      "animation-delay on at least 2 .item:nth-child() (stagger)",
+      ".spinner element in HTML",
+      "at least 3 .item elements in HTML"
+    ];
+
+    return {
+      pass: false,
+      title: "Not quite there",
+      feedback: "Missing:\n" + labels.filter((_,i) => !ok[i]).map(x => " • " + x).join("\n")
+    };
+  }
+},
   },
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -2450,12 +3070,13 @@ body { font-family: sans-serif; background: #f1f5f9; padding: 12px; }
         explain: "fixed removes the element from flow and pins it to the viewport — it stays in place regardless of how far the page is scrolled."
       }
     ],
-    challenge: {
-      title: "Positioned UI Components",
-      desc: "Build a sticky nav, absolute badges, and a fixed action button.",
-      task: `Create: (1) a <strong>sticky nav bar</strong> (<code>position: sticky; top: 0</code>) with a z-index, (2) <strong>cards</strong> with <code>absolute</code> badges pinned to a corner (parent needs <code>relative</code>), (3) a <strong>fixed</strong> button pinned to the bottom-right, (4) use <code>top: 50%; left: 50%; transform: translate(-50%, -50%)</code> to center something inside a card.`,
-      panes: ["html", "css"],
-      starterHtml: `<nav class="nav">My Site</nav>
+   // id: 17 challenge
+challenge: {
+  title: "Positioned UI Components",
+  desc: "Build a sticky nav, absolute badges, and a fixed action button.",
+  task: `Create: (1) a <strong>sticky nav bar</strong> (<code>position: sticky; top: 0</code>) with a z-index, (2) <strong>cards</strong> with <code>absolute</code> badges pinned to a corner (parent needs <code>relative</code>), (3) a <strong>fixed</strong> button pinned to the bottom-right, (4) use <code>top: 50%; left: 50%; transform: translate(-50%, -50%)</code> to center something inside a card.`,
+  panes: ["html", "css"],
+  starterHtml: `<nav class="nav">My Site</nav>
 
 <main class="page">
   <div class="card">
@@ -2476,7 +3097,7 @@ body { font-family: sans-serif; background: #f1f5f9; padding: 12px; }
 </main>
 
 <button class="fab">+ Add</button>`,
-      starterCss: `*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  starterCss: `*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: sans-serif; background: #f1f5f9; }
 
 .nav {
@@ -2494,7 +3115,7 @@ body { font-family: sans-serif; background: #f1f5f9; }
 
 .badge {
   position: absolute;
-  /* Pin to corner with top/right negative values */
+  /* Pin to corner with top/right values */
   /* Add background, color, padding, border-radius, font-weight */
 }
 
@@ -2505,7 +3126,6 @@ body { font-family: sans-serif; background: #f1f5f9; }
   top: 50%;
   left: 50%;
   /* Add transform to complete centering */
-  /* Style it so it's visible */
 }
 
 .fab {
@@ -2514,28 +3134,114 @@ body { font-family: sans-serif; background: #f1f5f9; }
   right: 24px;
   /* Add background, color, padding, border-radius, z-index, cursor, border:none */
 }`,
-      starterJs: ``,
-      hint: ".badge { top: -10px; right: -10px; } .fab { z-index: 100; background: #3b82f6; border-radius: 50px; border: none; }",
-      checks: code => {
-        const c = code.css || "";
-        const hasSticky    = /position\s*:\s*sticky/i.test(c);
-        const hasAbsolute  = /position\s*:\s*absolute/i.test(c);
-        const hasFixed     = /position\s*:\s*fixed/i.test(c);
-        const hasRelative  = /position\s*:\s*relative/i.test(c);
-        const hasZIndex    = /z-index\s*:/i.test(c);
-        const hasTranslate = /translate\s*\(/i.test(c);
-        if (hasSticky && hasAbsolute && hasFixed && hasRelative && hasZIndex && hasTranslate)
-          return { pass: true, title: "Positioning master!", feedback: "sticky, absolute, fixed, relative, z-index, and translate centering — all nailed!" };
-        const m = [];
-        if (!hasSticky)    m.push("position: sticky on .nav");
-        if (!hasRelative)  m.push("position: relative on .card");
-        if (!hasAbsolute)  m.push("position: absolute on .badge");
-        if (!hasFixed)     m.push("position: fixed on .fab");
-        if (!hasZIndex)    m.push("z-index on at least one element");
-        if (!hasTranslate) m.push("transform: translate(-50%, -50%) on .centered-label");
-        return { pass: false, title: "Keep going!", feedback: "Missing:\n" + m.map(x => " • " + x).join("\n") };
-      }
-    }
+  starterJs: ``,
+  hint: ".badge { top: -10px; right: -10px; } .fab { z-index: 100; background: #3b82f6; border-radius: 50px; border: none; }",
+  checks: code => {
+    const c = code.css || "";
+    const h = code.html || "";
+
+    // Sticky nav
+    const hasNavSticky      = /\.nav\s*\{[^}]*position\s*:\s*sticky/i.test(c);
+    const hasNavTop         = /\.nav\s*\{[^}]*top\s*:\s*0/i.test(c);
+    const hasNavZIndex      = /\.nav\s*\{[^}]*z-index\s*:/i.test(c);
+    const hasNavBg          = /\.nav\s*\{[^}]*(background|padding|color)\s*:/i.test(c);
+
+    // Card relative
+    const hasCardRelative   = /\.card\s*\{[^}]*position\s*:\s*relative/i.test(c);
+    const hasCardStyle      = /\.card\s*\{[^}]*(background|border-radius|padding)\s*:/i.test(c);
+
+    // Badge absolute + pinned
+    const hasBadgeAbsolute  = /\.badge\s*\{[^}]*position\s*:\s*absolute/i.test(c);
+    const hasBadgePinned    = /\.badge\s*\{[^}]*(top|right|bottom|left)\s*:/i.test(c);
+    const hasBadgeStyle     = /\.badge\s*\{[^}]*(background|color|padding)\s*:/i.test(c);
+
+    // Centered label
+    const hasCenteredPos    = /\.centered-label\s*\{[^}]*position\s*:\s*absolute/i.test(c);
+    const hasCenteredTop    = /\.centered-label\s*\{[^}]*top\s*:\s*50%/i.test(c);
+    const hasCenteredLeft   = /\.centered-label\s*\{[^}]*left\s*:\s*50%/i.test(c);
+    const hasCenteredTrans  = /\.centered-label\s*\{[^}]*translate\s*\(-50%/i.test(c);
+
+    // FAB fixed
+    const hasFabFixed       = /\.fab\s*\{[^}]*position\s*:\s*fixed/i.test(c);
+    const hasFabBottom      = /\.fab\s*\{[^}]*bottom\s*:/i.test(c);
+    const hasFabRight       = /\.fab\s*\{[^}]*right\s*:/i.test(c);
+    const hasFabZIndex      = /\.fab\s*\{[^}]*z-index\s*:/i.test(c);
+    const hasFabStyle       = /\.fab\s*\{[^}]*(background|border-radius|padding)\s*:/i.test(c);
+
+    // HTML structure
+    const hasNav            = /class=["']nav["']/.test(h);
+    const cardCount         = (h.match(/class=["']card["']/g) || []).length;
+    const hasTwoCards       = cardCount >= 2;
+    const badgeCount        = (h.match(/class=["']badge["']/g) || []).length;
+    const hasTwoBadges      = badgeCount >= 2;
+    const hasFab            = /class=["']fab["']/.test(h);
+    const hasCenteredEl     = /class=["']centered-label["']/.test(h);
+
+    const ok = [
+      hasNavSticky,
+      hasNavTop,
+      hasNavZIndex,
+      hasNavBg,
+      hasCardRelative,
+      hasCardStyle,
+      hasBadgeAbsolute,
+      hasBadgePinned,
+      hasBadgeStyle,
+      hasCenteredPos,
+      hasCenteredTop,
+      hasCenteredLeft,
+      hasCenteredTrans,
+      hasFabFixed,
+      hasFabBottom,
+      hasFabRight,
+      hasFabZIndex,
+      hasFabStyle,
+      hasNav,
+      hasTwoCards,
+      hasTwoBadges,
+      hasFab,
+      hasCenteredEl
+    ];
+
+    if (ok.every(Boolean)) return {
+      pass: true,
+      title: "Positioning master!",
+      feedback: `sticky nav with z-index, ${cardCount} cards with absolute badges, translate(-50%,-50%) centering, and fixed FAB — all nailed!`
+    };
+
+    const labels = [
+      "position: sticky on .nav",
+      "top: 0 on .nav",
+      "z-index on .nav",
+      ".nav styled (background/padding/color)",
+      "position: relative on .card",
+      ".card styled (background/border-radius/padding)",
+      "position: absolute on .badge",
+      "top/right/bottom/left to pin .badge to corner",
+      ".badge styled (background/color/padding)",
+      "position: absolute on .centered-label",
+      "top: 50% on .centered-label",
+      "left: 50% on .centered-label",
+      "translate(-50%, -50%) on .centered-label",
+      "position: fixed on .fab",
+      "bottom value on .fab",
+      "right value on .fab",
+      "z-index on .fab",
+      ".fab styled (background/border-radius/padding)",
+      ".nav element in HTML",
+      "at least 2 .card elements in HTML",
+      "at least 2 .badge elements in HTML",
+      ".fab button in HTML",
+      ".centered-label element in HTML"
+    ];
+
+    return {
+      pass: false,
+      title: "Keep going!",
+      feedback: "Missing:\n" + labels.filter((_,i) => !ok[i]).map(x => " • " + x).join("\n")
+    };
+  }
+},
   },
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -2717,12 +3423,13 @@ body { font-family: sans-serif; background: #f1f5f9; }
         explain: ":where() behaves exactly like :is() but contributes 0 to specificity — ideal for reusable utility styles that should be easy to override."
       }
     ],
-    challenge: {
-      title: "Polished Form & Numbered Steps",
-      desc: "Use pseudo-classes and pseudo-elements to build a styled form and step list.",
-      task: `Build: (1) a <strong>form</strong> with <code>:focus-visible</code> ring, <code>:disabled</code> opacity, <code>:placeholder-shown</code> dashed border, (2) a <strong>custom checkbox</strong> using <code>:checked</code> + <code>::after</code>, (3) a <strong>numbered step list</strong> using CSS <code>counter-reset</code>, <code>counter-increment</code> and <code>::before</code>, (4) <strong>zebra striping</strong> with <code>:nth-child(even)</code>.`,
-      panes: ["html", "css"],
-      starterHtml: `<form class="form">
+  // id: 18 challenge
+challenge: {
+  title: "Polished Form & Numbered Steps",
+  desc: "Use pseudo-classes and pseudo-elements to build a styled form and step list.",
+  task: `Build: (1) a <strong>form</strong> with <code>:focus-visible</code> ring, <code>:disabled</code> opacity, <code>:placeholder-shown</code> dashed border, (2) a <strong>custom checkbox</strong> using <code>:checked</code> + <code>::after</code>, (3) a <strong>numbered step list</strong> using CSS <code>counter-reset</code>, <code>counter-increment</code> and <code>::before</code>, (4) <strong>zebra striping</strong> with <code>:nth-child(even)</code>.`,
+  panes: ["html", "css"],
+  starterHtml: `<form class="form">
   <div class="field">
     <label>Your Name</label>
     <input type="text" placeholder="Enter name..." />
@@ -2752,7 +3459,7 @@ body { font-family: sans-serif; background: #f1f5f9; }
   <li>Mangoes</li>
   <li>Bananas</li>
 </ul>`,
-      starterCss: `*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  starterCss: `*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: sans-serif; background: #0f172a; color: white; padding: 24px; }
 h3 { margin: 20px 0 10px; }
 .field { margin-bottom: 14px; }
@@ -2796,30 +3503,110 @@ input:disabled { /* Reduce opacity, change cursor */ }
 .zebra { list-style: none; padding: 0; margin-top: 16px; }
 .zebra li { padding: 10px 14px; }
 .zebra li:nth-child(even) { /* Zebra stripe */ }`,
-      starterJs: ``,
-      hint: ".check-input:checked + .check-box { background: #3b82f6; } .steps li::before { background: #3b82f6; color: white; border-radius: 50%; width: 26px; height: 26px; }",
-      checks: code => {
-        const c = code.css || "";
-        const hasFocusVisible = /:focus-visible/i.test(c);
-        const hasDisabled     = /:disabled/i.test(c);
-        const hasPlaceholder  = /:placeholder-shown/i.test(c);
-        const hasChecked      = /:checked/i.test(c);
-        const hasBefore       = /::before/i.test(c);
-        const hasCounter      = /counter-reset|counter-increment/i.test(c);
-        const hasNthChild     = /:nth-child/i.test(c);
-        if (hasFocusVisible && hasDisabled && hasChecked && hasBefore && hasCounter && hasNthChild)
-          return { pass: true, title: "Pseudo expert!", feedback: ":focus-visible, :disabled, :checked, ::before counter, :nth-child — all done!" };
-        const m = [];
-        if (!hasFocusVisible) m.push(":focus-visible on input");
-        if (!hasDisabled)     m.push(":disabled on input");
-        if (!hasPlaceholder)  m.push(":placeholder-shown on input");
-        if (!hasChecked)      m.push(":checked on .check-input");
-        if (!hasBefore)       m.push("::before on .steps li");
-        if (!hasCounter)      m.push("counter-reset and counter-increment");
-        if (!hasNthChild)     m.push(":nth-child(even) on .zebra li");
-        return { pass: false, title: "Keep going!", feedback: "Missing:\n" + m.map(x => " • " + x).join("\n") };
-      }
-    }
+  starterJs: ``,
+  hint: ".check-input:checked + .check-box { background: #3b82f6; } .steps li::before { background: #3b82f6; color: white; border-radius: 50%; width: 26px; height: 26px; }",
+  checks: code => {
+    const c = code.css || "";
+    const h = code.html || "";
+
+    // Focus visible
+    const hasFocusVisible      = /input\s*:\s*focus-visible\s*\{[^}]+\}/i.test(c);
+    const hasFocusRing         = /input\s*:\s*focus-visible\s*\{[^}]*(box-shadow|border|outline)[^}]*\}/i.test(c);
+
+    // Placeholder shown
+    const hasPlaceholder       = /input\s*:\s*placeholder-shown\s*\{[^}]+\}/i.test(c);
+    const hasPlaceholderBorder = /input\s*:\s*placeholder-shown\s*\{[^}]*border[^}]*dashed[^}]*\}/i.test(c) ||
+                                 /input\s*:\s*placeholder-shown\s*\{[^}]*dashed[^}]*\}/i.test(c);
+
+    // Disabled
+    const hasDisabled          = /input\s*:\s*disabled\s*\{[^}]+\}/i.test(c);
+    const hasDisabledOpacity   = /input\s*:\s*disabled\s*\{[^}]*opacity\s*:/i.test(c);
+    const hasDisabledCursor    = /input\s*:\s*disabled\s*\{[^}]*cursor\s*:/i.test(c);
+
+    // Custom checkbox
+    const hasChecked           = /\.check-input\s*:\s*checked/i.test(c);
+    const hasCheckedBg         = /\.check-input\s*:\s*checked\s*\+\s*\.check-box\s*\{[^}]*(background|border)[^}]*\}/i.test(c);
+    const hasCheckAfter        = /\.check-input\s*:\s*checked\s*\+\s*\.check-box\s*::after\s*\{[^}]*content/i.test(c);
+    const hasCheckmarkStyle    = /\.check-input\s*:\s*checked\s*\+\s*\.check-box\s*::after\s*\{[^}]*(text-align|display|color)[^}]*\}/i.test(c);
+
+    // Counter steps
+    const hasCounterReset      = /counter-reset\s*:\s*step-counter/i.test(c);
+    const hasCounterIncrement  = /counter-increment\s*:\s*step-counter/i.test(c);
+    const hasStepsBefore       = /\.steps\s+li\s*::before\s*\{[^}]*content\s*:\s*counter/i.test(c);
+    const hasStepsCircle       = /\.steps\s+li\s*::before\s*\{[^}]*(border-radius|background|width)[^}]*\}/i.test(c);
+
+    // Zebra stripes
+    const hasNthChild          = /\.zebra\s+li\s*:\s*nth-child\s*\(\s*even\s*\)\s*\{[^}]+\}/i.test(c);
+    const hasZebraColor        = /\.zebra\s+li\s*:\s*nth-child\s*\(\s*even\s*\)\s*\{[^}]*(background|color)[^}]*\}/i.test(c);
+
+    // HTML structure
+    const hasStepsEl           = /class=["']steps["']/.test(h);
+    const hasZebraEl           = /class=["']zebra["']/.test(h);
+    const hasCheckboxEl        = /class=["']check-input["']/.test(h);
+    const stepCount            = (h.match(/<li>/g) || []).length;
+    const hasEnoughSteps       = stepCount >= 4;
+
+    const ok = [
+      hasFocusVisible,
+      hasFocusRing,
+      hasPlaceholder,
+      hasPlaceholderBorder,
+      hasDisabled,
+      hasDisabledOpacity,
+      hasDisabledCursor,
+      hasChecked,
+      hasCheckedBg,
+      hasCheckAfter,
+      hasCheckmarkStyle,
+      hasCounterReset,
+      hasCounterIncrement,
+      hasStepsBefore,
+      hasStepsCircle,
+      hasNthChild,
+      hasZebraColor,
+      hasStepsEl,
+      hasZebraEl,
+      hasCheckboxEl,
+      hasEnoughSteps
+    ];
+
+    if (ok.every(Boolean)) return {
+      pass: true,
+      title: "Pseudo expert!",
+      feedback: ":focus-visible ring, :placeholder-shown dashed border, :disabled opacity, :checked custom checkbox, CSS counter steps, and zebra :nth-child — all done!"
+    };
+
+    const labels = [
+      "input:focus-visible selector",
+      "focus ring (box-shadow, border, or outline) on :focus-visible",
+      "input:placeholder-shown selector",
+      "dashed border on :placeholder-shown",
+      "input:disabled selector",
+      "opacity on :disabled",
+      "cursor on :disabled",
+      ".check-input:checked selector",
+      "background or border change on :checked + .check-box",
+      "::after with content on :checked + .check-box",
+      "::after styled (text-align, display, or color for checkmark)",
+      "counter-reset: step-counter on .steps",
+      "counter-increment: step-counter on .steps li",
+      "content: counter(step-counter) on .steps li::before",
+      ".steps li::before styled as a circle (border-radius/background/width)",
+      ".zebra li:nth-child(even) selector",
+      "background or color on zebra even rows",
+      ".steps element in HTML",
+      ".zebra element in HTML",
+      ".check-input checkbox in HTML",
+      "at least 4 <li> items across step and zebra lists"
+    ];
+
+    return {
+      pass: false,
+      title: "Keep going!",
+      feedback: "Missing:\n" + labels.filter((_,i) => !ok[i]).map(x => " • " + x).join("\n")
+    };
+  }
+},
   },
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -2997,17 +3784,17 @@ input:disabled { /* Reduce opacity, change cursor */ }
         explain: "The second argument to var() is a fallback — the browser uses it when the variable is undefined or invalid. Useful for components that may or may not have a variable set by their context."
       }
     ],
-    challenge: {
-      title: "Themeable Design System",
-      desc: "Build a mini design system with CSS variables, calc(), and a live theme toggle.",
-      task: `Create: (1) a <strong>:root block</strong> with at least 6 custom properties (colors, spacing, radii), (2) a <strong>[data-theme="dark"]</strong> block that overrides the color variables, (3) use <strong>calc()</strong> at least twice for layout or spacing, (4) a <strong>toggle button</strong> that uses <code>setAttribute</code> in JS to switch the theme, (5) at least 3 UI components (button, card, badge) all styled using <code>var()</code>.`,
-      panes: ["html", "css", "js"],
-      starterHtml: `<div class="app">
+    // id: 19 challenge
+challenge: {
+  title: "Themeable Design System",
+  desc: "Build a mini design system with CSS variables, calc(), and a live theme toggle.",
+  task: `Create: (1) a <strong>:root block</strong> with at least 6 custom properties (colors, spacing, radii), (2) a <strong>[data-theme="dark"]</strong> block that overrides the color variables, (3) use <strong>calc()</strong> at least twice for layout or spacing, (4) a <strong>toggle button</strong> that uses <code>setAttribute</code> in JS to switch the theme, (5) at least 3 UI components (button, card, badge) all styled using <code>var()</code>.`,
+  panes: ["html", "css", "js"],
+  starterHtml: `<div class="app">
   <header class="header">
     <span class="logo">DesignSys</span>
     <button class="toggle-btn" id="themeToggle">🌙 Dark</button>
   </header>
-
   <main class="content">
     <div class="card">
       <span class="badge">New</span>
@@ -3015,7 +3802,6 @@ input:disabled { /* Reduce opacity, change cursor */ }
       <p>Every color, space, and radius uses a custom property. Toggle the theme!</p>
       <button class="btn">Primary Action</button>
     </div>
-
     <div class="card">
       <span class="badge accent">Tip</span>
       <h2>calc() Power</h2>
@@ -3024,8 +3810,7 @@ input:disabled { /* Reduce opacity, change cursor */ }
     </div>
   </main>
 </div>`,
-      starterCss: `:root {
-  /* Define at least 6 custom properties */
+  starterCss: `:root {
   --clr-bg:      #ffffff;
   --clr-surface: #f1f5f9;
   --clr-text:    #0f172a;
@@ -3033,7 +3818,6 @@ input:disabled { /* Reduce opacity, change cursor */ }
 }
 
 [data-theme="dark"] {
-  /* Override the color variables for dark mode */
   --clr-bg:      #0f172a;
   --clr-surface: #1e293b;
   --clr-text:    #f0f9ff;
@@ -3053,7 +3837,6 @@ body {
   justify-content: space-between;
   align-items: center;
   background: var(--clr-surface);
-  /* Use calc() for header height or padding */
   padding: 0 var(--space-md, 20px);
   height: calc(var(--space-lg, 24px) * 2.5);
   border-bottom: 1px solid var(--clr-border, #e2e8f0);
@@ -3063,14 +3846,12 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-md, 16px);
-  /* Use calc() for padding */
   padding: var(--space-lg, 24px);
 }
 
 .card {
   background: var(--clr-surface);
   border-radius: var(--radius, 12px);
-  /* Use var() for border, padding */
   position: relative;
   overflow: hidden;
 }
@@ -3078,7 +3859,6 @@ body {
 .badge {
   position: absolute;
   top: 12px; right: 12px;
-  /* Use var() for colors, border-radius */
   font-size: 11px; font-weight: bold; padding: 2px 8px;
 }
 .badge.accent { /* Different color */ }
@@ -3103,37 +3883,138 @@ p  { font-size: 14px; color: var(--clr-muted, #64748b); line-height: 1.6; }
   color: white; border: none; padding: 6px 14px;
   border-radius: var(--radius, 8px); cursor: pointer; font-size: 13px;
 }`,
-      starterJs: `const toggle = document.getElementById('themeToggle');
+  starterJs: `const toggle = document.getElementById('themeToggle');
 toggle.addEventListener('click', () => {
   const html = document.documentElement;
   const isDark = html.getAttribute('data-theme') === 'dark';
   html.setAttribute('data-theme', isDark ? 'light' : 'dark');
   toggle.textContent = isDark ? '🌙 Dark' : '☀️ Light';
 });`,
-      hint: "Use calc(var(--space-lg) * 2) for double spacing. Don't forget to define --clr-primary in both :root and [data-theme='dark'].",
-      checks: code => {
-        const c = code.css || "";
-        const js = code.js || "";
-        const hasRoot      = /:root\s*\{[^}]+--/i.test(c);
-        const hasDark      = /\[data-theme/i.test(c);
-        const hasVarUse    = /var\(--/i.test(c);
-        const hasCalc      = /calc\s*\(/i.test(c);
-        const hasCard      = /\.card\s*\{[^}]+\}/i.test(c);
-        const hasBtn       = /\.btn\s*\{[^}]+\}/i.test(c);
-        const hasToggle    = /setAttribute/i.test(js);
-        if (hasRoot && hasDark && hasVarUse && hasCalc && hasCard && hasBtn && hasToggle)
-          return { pass: true, title: "Design system complete!", feedback: ":root variables, dark override, calc(), var() usage, and JS toggle — excellent work!" };
-        const m = [];
-        if (!hasRoot)   m.push(":root { } with CSS variables");
-        if (!hasDark)   m.push("[data-theme='dark'] override block");
-        if (!hasVarUse) m.push("var(--name) on elements");
-        if (!hasCalc)   m.push("calc() at least once");
-        if (!hasCard)   m.push(".card with var() styles");
-        if (!hasBtn)    m.push(".btn with var() styles");
-        if (!hasToggle) m.push("setAttribute in JS to toggle theme");
-        return { pass: false, title: "Not complete yet", feedback: "Missing:\n" + m.map(x => " • " + x).join("\n") };
-      }
-    }
+  hint: "Use calc(var(--space-lg) * 2) for double spacing. Don't forget to define --clr-primary in both :root and [data-theme='dark'].",
+  checks: code => {
+    const c = code.css || "";
+    const js = code.js || "";
+    const h = code.html || "";
+
+    // :root variables — count how many are defined
+    const rootVarMatches   = [...(c.match(/--[a-zA-Z][\w-]*\s*:/g) || [])];
+    const hasSixVars       = rootVarMatches.length >= 6;
+    const hasRootBlock     = /:root\s*\{[^}]+--/i.test(c);
+
+    // Color variables specifically in :root
+    const hasClrPrimary    = /--clr-primary\s*:/i.test(c);
+    const hasClrMuted      = /--clr-muted\s*:|--clr-muted/i.test(c);
+    const hasClrBorder     = /--clr-border\s*:/i.test(c);
+
+    // Dark theme override block
+    const hasDarkBlock     = /\[data-theme\s*=\s*["']dark["']\]\s*\{[^}]+--/i.test(c);
+    const darkOverridesBg  = /\[data-theme\s*=\s*["']dark["']\][\s\S]*?--clr-bg\s*:/i.test(c);
+    const darkOverridesTxt = /\[data-theme\s*=\s*["']dark["']\][\s\S]*?--clr-text\s*:/i.test(c);
+    const darkOverridesPri = /\[data-theme\s*=\s*["']dark["']\][\s\S]*?--clr-primary\s*:/i.test(c);
+
+    // calc() usage — count occurrences
+    const calcMatches      = [...(c.matchAll(/calc\s*\(/gi) || [])];
+    const hasTwoCalc       = calcMatches.length >= 2;
+    const hasCalcWithVar   = /calc\s*\([^)]*var\(--/i.test(c);
+
+    // var() usage on components
+    const varUseCount      = [...(c.matchAll(/var\(--/g) || [])].length;
+    const hasManyVarUses   = varUseCount >= 5;
+
+    // Individual component checks
+    const hasCardVar       = /\.card\s*\{[^}]*var\(--/i.test(c);
+    const hasCardPadding   = /\.card\s*\{[^}]*padding\s*:/i.test(c);
+    const hasBtnVar        = /\.btn\s*\{[^}]*var\(--/i.test(c);
+    const hasBadgeVar      = /\.badge\s*\{[^}]*var\(--|\.badge\s*\{[^}]*(background|color)\s*:/i.test(c);
+    const hasBadgeAccent   = /\.badge\.accent\s*\{[^}]*(background|color)[^}]*\}/i.test(c);
+    const hasSecondaryBtn  = /\.btn\.secondary\s*\{[^}]+\}/i.test(c);
+
+    // Transition for smooth theme switch
+    const hasTransition    = /transition\s*:[^;]*(background|color)/i.test(c);
+
+    // JS toggle
+    const hasSetAttribute  = /setAttribute\s*\(/i.test(js);
+    const hasDataTheme     = /data-theme/i.test(js);
+    const hasToggleLogic   = /isDark|getAttribute/i.test(js);
+    const hasTextChange    = /textContent/i.test(js);
+
+    // HTML structure
+    const hasThemeToggleEl = /id=["']themeToggle["']/.test(h);
+    const cardCount        = (h.match(/class=["']card["']/g) || []).length;
+    const hasTwoCards      = cardCount >= 2;
+    const hasBadgeEl       = /class=["']badge["']/.test(h);
+
+    const ok = [
+      hasRootBlock,
+      hasSixVars,
+      hasClrPrimary,
+      hasClrMuted,
+      hasClrBorder,
+      hasDarkBlock,
+      darkOverridesBg,
+      darkOverridesTxt,
+      darkOverridesPri,
+      hasTwoCalc,
+      hasCalcWithVar,
+      hasManyVarUses,
+      hasCardVar,
+      hasCardPadding,
+      hasBtnVar,
+      hasBadgeVar,
+      hasBadgeAccent,
+      hasSecondaryBtn,
+      hasTransition,
+      hasSetAttribute,
+      hasDataTheme,
+      hasToggleLogic,
+      hasTextChange,
+      hasThemeToggleEl,
+      hasTwoCards,
+      hasBadgeEl
+    ];
+
+    if (ok.every(Boolean)) return {
+      pass: true,
+      title: "Design system complete!",
+      feedback: `${rootVarMatches.length} CSS variables, dark theme override, ${calcMatches.length}× calc(), ${varUseCount} var() uses across components, and JS toggle — excellent work!`
+    };
+
+    const labels = [
+      ":root { } block with variables",
+      `at least 6 custom properties (found ${rootVarMatches.length})`,
+      "--clr-primary defined in :root",
+      "--clr-muted defined",
+      "--clr-border defined",
+      "[data-theme='dark'] override block with variables",
+      "--clr-bg overridden in dark block",
+      "--clr-text overridden in dark block",
+      "--clr-primary overridden in dark block",
+      `calc() used at least twice (found ${calcMatches.length})`,
+      "calc() using a var() inside it",
+      `var(--) used on at least 5 properties (found ${varUseCount})`,
+      ".card styled with var()",
+      "padding on .card",
+      ".btn styled with var()",
+      ".badge styled with background or color",
+      ".badge.accent with different color",
+      ".btn.secondary variant styled",
+      "transition for smooth theme switching (background/color)",
+      "setAttribute() in JS",
+      "data-theme used in JS toggle",
+      "getAttribute or isDark toggle logic in JS",
+      "textContent updated on toggle button",
+      "#themeToggle button in HTML",
+      `at least 2 .card elements in HTML (found ${cardCount})`,
+      ".badge element in HTML"
+    ];
+
+    return {
+      pass: false,
+      title: "Not complete yet",
+      feedback: "Missing:\n" + labels.filter((_,i) => !ok[i]).map(x => " • " + x).join("\n")
+    };
+  }
+}
   },
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -3392,12 +4273,12 @@ toggle.addEventListener('click', () => {
         explain: "@media (prefers-reduced-motion: reduce) reads the OS accessibility setting. Inside, set animation-duration: 0.01ms and transition-duration: 0.01ms on all elements."
       }
     ],
-    challenge: {
-      title: "Fully Fluid Responsive Page",
-      desc: "Build a modern responsive layout using clamp(), min(), max(), and accessibility queries.",
-      task: `Build a page with: (1) a <strong>fluid heading</strong> using <code>clamp()</code> for font-size, (2) a <strong>container</strong> using <code>min(100%, 900px)</code> + <code>margin: 0 auto</code>, (3) a <strong>card grid</strong> using <code>auto-fill + minmax(clamp(...))</code>, (4) <strong>fluid padding</strong> via <code>max(16px, 4vw)</code>, (5) a <code>@media (prefers-reduced-motion: reduce)</code> block that disables all transitions, (6) at least one standalone use of <code>min()</code> or <code>max()</code>.`,
-      panes: ["html", "css"],
-      starterHtml: `<div class="container">
+   challenge: {
+  title: "Fully Fluid Responsive Page",
+  desc: "Build a modern responsive layout using clamp(), min(), max(), and accessibility queries.",
+  task: `Build a page with: (1) a <strong>fluid heading</strong> using <code>clamp()</code> for font-size, (2) a <strong>container</strong> using <code>min(100%, 900px)</code> + <code>margin: 0 auto</code>, (3) a <strong>card grid</strong> using <code>auto-fill + minmax(clamp(...))</code>, (4) <strong>fluid padding</strong> via <code>max(16px, 4vw)</code>, (5) a <code>@media (prefers-reduced-motion: reduce)</code> block that disables all transitions, (6) at least one standalone use of <code>min()</code> or <code>max()</code>.`,
+  panes: ["html", "css"],
+  starterHtml: `<div class="container">
   <header class="hero">
     <p class="eyebrow">Modern CSS</p>
     <h1>Fluid Responsive Design</h1>
@@ -3427,7 +4308,7 @@ toggle.addEventListener('click', () => {
     </div>
   </div>
 </div>`,
-      starterCss: `:root {
+  starterCss: `:root {
   --primary:  #3b82f6;
   --bg:       #0f172a;
   --surface:  #1e293b;
@@ -3439,14 +4320,11 @@ toggle.addEventListener('click', () => {
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: sans-serif; background: var(--bg); color: var(--text); }
 
-/* 1. Container — use min() */
 .container {
   width: min(100%, 900px);
   margin: 0 auto;
-  /* Use max() for fluid padding */
 }
 
-/* 2. Hero */
 .hero { text-align: center; padding: clamp(32px, 8vw, 80px) 0; }
 
 .eyebrow {
@@ -3464,10 +4342,8 @@ h1 {
   color: var(--muted);
   max-width: min(60ch, 100%);
   margin: 16px auto 0; line-height: 1.7;
-  /* Fluid font-size */
 }
 
-/* 3. Card grid — auto-fill + minmax with clamp inside */
 .card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(clamp(200px, 28%, 280px), 1fr));
@@ -3475,12 +4351,10 @@ h1 {
   margin-top: clamp(24px, 5vw, 48px);
 }
 
-/* 4. Cards */
 .card {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 12px;
-  /* Use clamp() or max() for padding */
   transition: transform 0.25s, border-color 0.25s;
 }
 .card:hover { transform: translateY(-4px); border-color: var(--primary); }
@@ -3489,32 +4363,137 @@ h1 {
 h3    { font-size: clamp(1rem, 2vw, 1.15rem); margin-bottom: 6px; }
 p     { font-size: clamp(0.85rem, 1.5vw, 0.95rem); color: var(--muted); line-height: 1.6; }
 
-/* 5. Accessibility — disable all motion */
 @media (prefers-reduced-motion: reduce) {
   /* Your rules here */
 }`,
-      starterJs: ``,
-      hint: "h1 { font-size: clamp(2rem, 7vw, 4.5rem); } and @media (prefers-reduced-motion) { *, *::before, *::after { transition: none !important; animation: none !important; } }",
-      checks: code => {
-        const c = code.css || "";
-        const hasClamp     = /clamp\s*\(/i.test(c);
-        const hasMin       = /\bmin\s*\(/i.test(c);
-        const hasMax       = /\bmax\s*\(/i.test(c);
-        const hasAutoFill  = /auto-fill|auto-fit/i.test(c);
-        const hasMinmax    = /minmax\s*\(/i.test(c);
-        const hasMotion    = /prefers-reduced-motion/i.test(c);
-        if (hasClamp && hasMin && hasMax && hasAutoFill && hasMinmax && hasMotion)
-          return { pass: true, title: "Fluid design complete!", feedback: "clamp(), min(), max(), auto-fill + minmax(), and prefers-reduced-motion — perfectly done!" };
-        const m = [];
-        if (!hasClamp)    m.push("clamp() for fluid font-size or spacing");
-        if (!hasMin)      m.push("min() for container width");
-        if (!hasMax)      m.push("max() for minimum padding");
-        if (!hasAutoFill) m.push("auto-fill or auto-fit in grid");
-        if (!hasMinmax)   m.push("minmax() in grid-template-columns");
-        if (!hasMotion)   m.push("@media (prefers-reduced-motion: reduce) block");
-        return { pass: false, title: "Almost there!", feedback: "Missing:\n" + m.map(x => " • " + x).join("\n") };
-      }
-    }
+  starterJs: ``,
+  hint: "h1 { font-size: clamp(2rem, 7vw, 4.5rem); } and @media (prefers-reduced-motion) { *, *::before, *::after { transition: none !important; animation: none !important; } }",
+  checks: code => {
+    const c = code.css || "";
+    const h = code.html || "";
+
+    // clamp() usage — count and check specific uses
+    const clampMatches       = [...(c.matchAll(/clamp\s*\(/gi) || [])];
+    const hasClamp           = clampMatches.length >= 1;
+    const hasManyClamp       = clampMatches.length >= 3;
+    const hasH1Clamp         = /h1\s*\{[^}]*clamp\s*\(/i.test(c);
+    const hasSubtitleClamp   = /\.subtitle\s*\{[^}]*clamp\s*\(/i.test(c) ||
+                               /\.subtitle\s*\{[^}]*font-size/i.test(c);
+
+    // min() usage
+    const hasMin             = /\bmin\s*\(/i.test(c);
+    const hasContainerMin    = /\.container\s*\{[^}]*\bmin\s*\(/i.test(c);
+    const hasContainerMargin = /\.container\s*\{[^}]*margin\s*:[^}]*auto/i.test(c);
+    const hasMinCh           = /\bmin\s*\(\s*\d+ch/i.test(c);
+
+    // max() usage
+    const hasMax             = /\bmax\s*\(/i.test(c);
+    const hasMaxPadding      = /padding[^;]*\bmax\s*\(/i.test(c) ||
+                               /\bmax\s*\(\s*\d+px\s*,\s*\d+vw\s*\)/i.test(c);
+
+    // Grid with auto-fill + minmax
+    const hasAutoFill        = /auto-fill|auto-fit/i.test(c);
+    const hasMinmax          = /minmax\s*\(/i.test(c);
+    const hasCardGrid        = /\.card-grid\s*\{[^}]*display\s*:\s*grid/i.test(c);
+    const hasGridClamp       = /minmax\s*\([^)]*clamp\s*\(/i.test(c);
+    const hasGridGap         = /\.card-grid\s*\{[^}]*gap\s*:/i.test(c);
+
+    // Card styling
+    const hasCardStyle       = /\.card\s*\{[^}]*(background|padding|border-radius)[^}]*\}/i.test(c);
+    const hasCardHover       = /\.card\s*:\s*hover\s*\{[^}]+\}/i.test(c);
+    const hasCardPadding     = /\.card\s*\{[^}]*padding\s*:/i.test(c);
+
+    // Fluid padding with max()
+    const hasFluidPadding    = /padding[^;]*max\s*\(/i.test(c) ||
+                               /padding[^;]*clamp\s*\(/i.test(c);
+
+    // Reduced motion block
+    const hasMotion          = /@media\s*\([^)]*prefers-reduced-motion\s*:\s*reduce/i.test(c);
+    const hasMotionDisable   = /@media\s*\([^)]*prefers-reduced-motion[\s\S]*?(transition|animation)\s*:/i.test(c);
+    const hasMotionImportant = /@media\s*\([^)]*prefers-reduced-motion[\s\S]*?!important/i.test(c);
+
+    // CSS variables used
+    const varUseCount        = [...(c.matchAll(/var\(--/g) || [])].length;
+    const hasVarUse          = varUseCount >= 4;
+
+    // HTML structure
+    const cardCount          = (h.match(/class=["']card["']/g) || []).length;
+    const hasFourCards       = cardCount >= 4;
+    const hasHero            = /class=["']hero["']/.test(h);
+    const hasCardGridEl      = /class=["']card-grid["']/.test(h);
+    const hasH1              = /<h1>/i.test(h);
+
+    const ok = [
+      hasClamp,
+      hasManyClamp,
+      hasH1Clamp,
+      hasMin,
+      hasContainerMin,
+      hasContainerMargin,
+      hasMinCh,
+      hasMax,
+      hasMaxPadding,
+      hasAutoFill,
+      hasMinmax,
+      hasCardGrid,
+      hasGridClamp,
+      hasGridGap,
+      hasCardStyle,
+      hasCardHover,
+      hasCardPadding,
+      hasFluidPadding,
+      hasMotion,
+      hasMotionDisable,
+      hasMotionImportant,
+      hasVarUse,
+      hasFourCards,
+      hasHero,
+      hasCardGridEl,
+      hasH1
+    ];
+
+    if (ok.every(Boolean)) return {
+      pass: true,
+      title: "Fluid design complete!",
+      feedback: `${clampMatches.length}× clamp(), min() container, max() padding, auto-fill + minmax(clamp()), prefers-reduced-motion with !important — perfectly done!`
+    };
+
+    const labels = [
+      "clamp() used at least once",
+      `clamp() used at least 3 times (found ${clampMatches.length})`,
+      "clamp() for h1 font-size",
+      "min() used at least once",
+      "min() on .container width e.g. min(100%, 900px)",
+      "margin: 0 auto on .container to center it",
+      "min(Xch, 100%) for prose width",
+      "max() used at least once",
+      "max() for fluid padding e.g. max(16px, 4vw)",
+      "auto-fill or auto-fit in grid",
+      "minmax() in grid-template-columns",
+      "display: grid on .card-grid",
+      "clamp() inside minmax() for responsive cards",
+      "gap on .card-grid",
+      ".card styled (background/padding/border-radius)",
+      ".card:hover styles",
+      "padding on .card",
+      "fluid padding using max() or clamp()",
+      "@media (prefers-reduced-motion: reduce) block",
+      "transition or animation disabled inside reduced-motion block",
+      "!important used in reduced-motion to ensure override",
+      `var(--) used at least 4 times (found ${varUseCount})`,
+      `at least 4 .card elements in HTML (found ${cardCount})`,
+      ".hero element in HTML",
+      ".card-grid element in HTML",
+      "<h1> element in HTML"
+    ];
+
+    return {
+      pass: false,
+      title: "Almost there!",
+      feedback: "Missing:\n" + labels.filter((_,i) => !ok[i]).map(x => " • " + x).join("\n")
+    };
+  }
+},
   },
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   //  JS LESSONS 21–25
